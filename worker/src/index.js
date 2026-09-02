@@ -1,7 +1,7 @@
 export default {
   async fetch(request) {
     if (request.method !== 'POST') {
-      return new Response('Avokádo Guard Viber webhook is running.', { status: 200 });
+      return new Response('Melichar Viber webhook is running.', { status: 200 });
     }
 
     let body = null;

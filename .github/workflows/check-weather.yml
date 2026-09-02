@@ -1,4 +1,4 @@
-name: Avokádo Guard - Weather Check
+name: Melichar - Weather Check
 
 on:
   schedule:
@@ -41,7 +41,7 @@ jobs:
 
       - name: Commit updated state
         run: |
-          git config user.name "avokado-guard-bot"
+          git config user.name "melichar-bot"
           git config user.email "actions@users.noreply.github.com"
           git add state.json
           git diff --cached --quiet || git commit -m "chore: update weather state"

@@ -1,4 +1,4 @@
-# Avokádo Guard
+# Melichar
 
 Sleduje 7-dňovú predpoveď počasia pre Oznice 158 (lat 49.4376699, lon 17.9046572)
 a posiela cez Viber upozornenie, keď má niektorá noc klesnúť pod 10 °C.
@@ -35,7 +35,7 @@ GitHub Actions (cron 3x/deň)          Cloudflare Worker (vždy bežiaci)
 
 1. Choď na https://partners.viber.com, prihlás sa cez Viber účet.
 2. Vytvor nový **Bot Account** (nie Public Account) — zadaj meno napr.
-   "Avokádo Guard".
+   "Melichar".
 3. Po vytvorení nájdeš v nastaveniach bota **Auth Token** — skopíruj si ho.
 4. Tam istom mieste nájdeš QR kód / verejný odkaz na bota.
 
@@ -51,7 +51,7 @@ npx wrangler deploy
 ```
 
 Po deploy dostaneš URL typu
-`https://avokado-guard-viber-webhook.<tvoj-subdomain>.workers.dev`.
+`https://melichar-viber-webhook.<tvoj-subdomain>.workers.dev`.
 
 ### 3. Zaregistruj webhook vo Viberi
 
@@ -60,7 +60,7 @@ curl -X POST https://chatapi.viber.com/pha/set_webhook \
   -H "X-Viber-Auth-Token: <AUTH_TOKEN_Z_KROKU_1>" \
   -H "Content-Type: application/json" \
   -d '{
-    "url": "https://avokado-guard-viber-webhook.<tvoj-subdomain>.workers.dev",
+    "url": "https://melichar-viber-webhook.<tvoj-subdomain>.workers.dev",
     "event_types": ["subscribed", "unsubscribed", "conversation_started", "message"]
   }'
 ```
@@ -83,7 +83,7 @@ Malo by prísť `{"status":0,"status_message":"ok",...}`.
    - `VIBER_RECEIVER_ID` — z kroku 4
 3. Push. Workflow `.github/workflows/check-weather.yml` sa aktivuje
    automaticky podľa cron rozvrhu.
-4. Over funkčnosť manuálne: **Actions → Avokádo Guard - Weather Check →
+4. Over funkčnosť manuálne: **Actions → Melichar - Weather Check →
    Run workflow** (spustí sa ako "evening" beh, takže ak je dnes pod 10 °C,
    príde ti správa hneď).
 

@@ -46,7 +46,7 @@ async function sendViberMessage(text) {
     body: JSON.stringify({
       receiver: process.env.VIBER_RECEIVER_ID,
       min_api_version: 1,
-      sender: { name: 'Avokádo Guard' },
+      sender: { name: 'Melichar' },
       type: 'text',
       text,
     }),
@@ -96,7 +96,7 @@ async function main() {
   }
 
   if (messages.length) {
-    await sendViberMessage(`🥶 Avokádo Guard\n\n${messages.join('\n\n')}`);
+    await sendViberMessage(`🥶 Melichar\n\n${messages.join('\n\n')}`);
     console.log('Notification sent:\n' + messages.join('\n\n'));
   } else {
     console.log('No notification needed. Today min:', fmtTemp(today.min));
