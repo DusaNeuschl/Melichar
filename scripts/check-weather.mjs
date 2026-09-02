@@ -36,18 +36,13 @@ async function fetchForecast() {
   return data.daily.time.map((date, i) => ({ date, min: data.daily.temperature_2m_min[i] }));
 }
 
-async function sendViberMessage(text) {
-  const res = await fetch('https://chatapi.viber.com/pha/send_message', {
+async function sendTelegramMessage(text) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Viber-Auth-Token': process.env.VIBER_AUTH_TOKEN,
-    },
+    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      receiver: process.env.VIBER_RECEIVER_ID,
-      min_api_version: 1,
-      sender: { name: 'Melichar' },
-      type: 'text',
+      chat_id: process.env.TELEGRAM_CHAT_ID,
       text,
     }),
   });
@@ -56,10 +51,10 @@ async function sendViberMessage(text) {
   try {
     data = JSON.parse(raw);
   } catch {
-    throw new Error(`Viber send failed: HTTP ${res.status} - ${raw.slice(0, 300)}`);
+    throw new Error(`Telegram send failed: HTTP ${res.status} - ${raw.slice(0, 300)}`);
   }
-  if (data.status !== 0) {
-    throw new Error(`Viber send failed: ${JSON.stringify(data)}`);
+  if (!data.ok) {
+    throw new Error(`Telegram send failed: ${JSON.stringify(data)}`);
   }
 }
 
@@ -96,7 +91,7 @@ async function main() {
   }
 
   if (messages.length) {
-    await sendViberMessage(`🥶 Melichar\n\n${messages.join('\n\n')}`);
+    await sendTelegramMessage(`🥶 Melichar\n\n${messages.join('\n\n')}`);
     console.log('Notification sent:\n' + messages.join('\n\n'));
   } else {
     console.log('No notification needed. Today min:', fmtTemp(today.min));

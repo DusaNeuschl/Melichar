@@ -1,100 +1,71 @@
 # Melichar
 
 Sleduje 7-dňovú predpoveď počasia pre Oznice 158 (lat 49.4376699, lon 17.9046572)
-a posiela cez Viber upozornenie, keď má niektorá noc klesnúť pod 10 °C.
+a posiela cez Telegram upozornenie, keď má niektorá noc klesnúť pod 10 °C.
 
 - **Kontroly:** 3x denne (~07:00 / 12:00 / 16:00 Europe/Prague, cron beží v UTC takže
   s DST môže reálny čas skĺznuť o +-1h)
 - **Zdroj počasia:** Open-Meteo (zdarma, bez API kľúča)
-- **Notifikácia:** Viber Bot API (oficiálne, `send_message`)
+- **Notifikácia:** Telegram Bot API (`sendMessage`) — zdarma, self-service, žiadne
+  schvaľovanie ani 24h okno (na rozdiel od WhatsApp/Viber, kde je proaktívne
+  posielanie správ mimo session okna zablokované/spoplatnené schválenými šablónami)
 - **Dedup logika:**
   - Večerný beh (16:00): ak dnešná noc < 10 °C, VŽDY pošle pripomienku
   - Ktorýkoľvek beh: ak sa zmenila predpoveď pre niektorý z dní +1 až +6
     (novo klesla pod 10 °C, alebo sa naopak zlepšila), pošle update
 - **Stav** (`state.json`) sa po každom behu commitne späť do repa
 
-## Prečo dva komponenty
+## Architektúra
 
-Viber Bot API vyžaduje bežiaci verejný HTTPS webhook, inak `send_message`
-nefunguje vôbec — nestačí len jednorazovo zavolať API. GitHub Actions je
-len cron, nič neposlúcha, preto webhook beží samostatne na Cloudflare
-Workers (zdarma, vždy dostupný). Samotná logika kontroly počasia beží
-naďalej na GitHub Actions cron.
+Celá logika beží v jednom kroku na GitHub Actions cron — Telegram Bot API
+nevyžaduje žiadny bežiaci webhook pre jednosmerné posielanie správ, takže
+netreba žiadny druhý komponent (na rozdiel od pôvodne zvažovaného Vibera).
 
 ```
-GitHub Actions (cron 3x/deň)          Cloudflare Worker (vždy bežiaci)
-  -> Open-Meteo forecast                -> prijíma Viber webhook callbacky
-  -> vyhodnotí prah 10°C                -> udržuje Viber účet aktívny
-  -> Viber send_message  ------------>  (nezávislé, len jednorazovo treba
-     (priamo, nie cez worker)            na získanie tvojho user ID)
+GitHub Actions (cron 3x/deň)
+  -> Open-Meteo forecast (Oznice)
+  -> vyhodnotí prah 10 °C + dedup voči state.json
+  -> Telegram sendMessage
+  -> commitne aktualizovaný state.json
 ```
 
 ## Nastavenie krok za krokom
 
-### 1. Vytvor Viber bota
+### 1. Vytvor Telegram bota
 
-1. Choď na https://partners.viber.com, prihlás sa cez Viber účet.
-2. Vytvor nový **Bot Account** (nie Public Account) — zadaj meno napr.
-   "Melichar".
-3. Po vytvorení nájdeš v nastaveniach bota **Auth Token** — skopíruj si ho.
-4. Tam istom mieste nájdeš QR kód / verejný odkaz na bota.
+1. V Telegrame nájdi **@BotFather** a napíš mu `/newbot`.
+2. Zadaj meno bota (napr. "Melichar") a username (musí končiť na `bot`,
+   napr. `melichar_avocado_bot`).
+3. BotFather ti pošle **API token** — skopíruj si ho (vyzerá ako
+   `123456789:ABCdefGhIJKlmNoPQRstuVwxYZ`).
 
-### 2. Nasaď Cloudflare Worker (webhook)
+### 2. Zisti svoje chat ID
 
-Potrebuješ zadarmo Cloudflare účet.
+1. Vo Telegrame si napíš svojmu novému botovi ľubovoľnú správu (napr. "ahoj").
+2. Otvor v prehliadači (nahraď `<TOKEN>` skutočným tokenom):
+   `https://api.telegram.org/bot<TOKEN>/getUpdates`
+3. V JSON odpovedi nájdi `"message":{"chat":{"id": ...}}` — to číslo je tvoje
+   `TELEGRAM_CHAT_ID`.
 
-```bash
-cd worker
-npm create cloudflare@latest -- --existing-script  # alebo priamo:
-npx wrangler login
-npx wrangler deploy
-```
+### 3. Založ GitHub repo a nastav secrets
 
-Po deploy dostaneš URL typu
-`https://melichar-viber-webhook.<tvoj-subdomain>.workers.dev`.
-
-### 3. Zaregistruj webhook vo Viberi
-
-```bash
-curl -X POST https://chatapi.viber.com/pha/set_webhook \
-  -H "X-Viber-Auth-Token: <AUTH_TOKEN_Z_KROKU_1>" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "url": "https://melichar-viber-webhook.<tvoj-subdomain>.workers.dev",
-    "event_types": ["subscribed", "unsubscribed", "conversation_started", "message"]
-  }'
-```
-
-Malo by prísť `{"status":0,"status_message":"ok",...}`.
-
-### 4. Zisti svoje Viber user ID
-
-1. V druhom termináli spusti (necháš bežať): `npx wrangler tail` (v priečinku `worker/`)
-2. Vo Viber appke pridaj bota (naskenuj QR z partners.viber.com alebo klikni
-   na jeho verejný odkaz) a pošli mu ľubovoľnú správu, napr. "ahoj".
-3. V logu `wrangler tail` sa objaví JSON s poľom `sender.id` (alebo `user.id`
-   pri evente `subscribed`) — to je tvoje `VIBER_RECEIVER_ID`. Skopíruj si ho.
-
-### 5. Založ GitHub repo a nastav secrets
-
-1. Zaraď tento priečinok do nového GitHub repa (môže byť súkromné).
+1. Repo `melichar` je už založené a pushnuté: https://github.com/DusaNeuschl/Melichar
 2. V repe choď do **Settings → Secrets and variables → Actions** a pridaj:
-   - `VIBER_AUTH_TOKEN` — z kroku 1
-   - `VIBER_RECEIVER_ID` — z kroku 4
-3. Push. Workflow `.github/workflows/check-weather.yml` sa aktivuje
-   automaticky podľa cron rozvrhu.
+   - `TELEGRAM_BOT_TOKEN` — z kroku 1
+   - `TELEGRAM_CHAT_ID` — z kroku 2
+3. Workflow `.github/workflows/check-weather.yml` sa aktivuje automaticky
+   podľa cron rozvrhu.
 4. Over funkčnosť manuálne: **Actions → Melichar - Weather Check →
    Run workflow** (spustí sa ako "evening" beh, takže ak je dnes pod 10 °C,
    príde ti správa hneď).
 
 ## Neskorší presun na vlastnú VPS
 
-Cloudflare Worker (webhook) môže ostať bežať zadarmo aj potom — nie je
-dôvod ho sťahovať. Stačí presunúť len cron logiku: na VPS pridaj
-`crontab` záznamy volajúce `node scripts/check-weather.mjs` s rovnakými
-env premennými (`VIBER_AUTH_TOKEN`, `VIBER_RECEIVER_ID`, `RUN_TYPE`,
-`LATITUDE`, `LONGITUDE`) namiesto GitHub Actions cronu, a `state.json`
-nechaj len ako lokálny súbor (netreba git commit).
+Stačí presunúť cron logiku: na VPS pridaj `crontab` záznamy volajúce
+`node scripts/check-weather.mjs` s rovnakými env premennými
+(`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`, `RUN_TYPE`, `LATITUDE`,
+`LONGITUDE`) namiesto GitHub Actions cronu, a `state.json` nechaj len ako
+lokálny súbor (netreba git commit).
 
 ## Zmena prahovej teploty alebo súradníc
 

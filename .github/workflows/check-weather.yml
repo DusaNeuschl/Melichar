@@ -32,8 +32,8 @@ jobs:
 
       - name: Run weather check
         env:
-          VIBER_AUTH_TOKEN: ${{ secrets.VIBER_AUTH_TOKEN }}
-          VIBER_RECEIVER_ID: ${{ secrets.VIBER_RECEIVER_ID }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           RUN_TYPE: ${{ steps.runtype.outputs.type }}
           LATITUDE: '49.4376699'
           LONGITUDE: '17.9046572'
