@@ -7,7 +7,8 @@ const STATE_PATH = fileURLToPath(new URL('../state.json', import.meta.url));
 const lat = process.env.LATITUDE;
 const lon = process.env.LONGITUDE;
 const runType = process.env.RUN_TYPE || 'manual';
-const isEveningRun = runType === 'evening' || runType === 'manual';
+const isEveningRun = runType === 'evening';
+const isManualRun = runType === 'manual';
 
 function fmtTemp(t) {
   return `${Math.round(t * 10) / 10}°C`;
@@ -58,6 +59,14 @@ async function sendTelegramMessage(text) {
   }
 }
 
+function buildForecastSummary(forecast) {
+  const lines = forecast.map((d) => {
+    const flag = d.min < THRESHOLD_C ? ' 🥶' : '';
+    return `${d.date}: ${fmtTemp(d.min)}${flag}`;
+  });
+  return `📋 Melichar — predpoveď na 7 dní (Oznice)\n\n${lines.join('\n')}`;
+}
+
 async function main() {
   const forecast = await fetchForecast();
   const state = await loadState();
@@ -90,7 +99,10 @@ async function main() {
     if (!validDates.has(key)) delete state.days[key];
   }
 
-  if (messages.length) {
+  if (isManualRun) {
+    await sendTelegramMessage(buildForecastSummary(forecast));
+    console.log('Manual run - forecast summary sent.');
+  } else if (messages.length) {
     await sendTelegramMessage(`🥶 Melichar\n\n${messages.join('\n\n')}`);
     console.log('Notification sent:\n' + messages.join('\n\n'));
   } else {

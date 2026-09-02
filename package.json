@@ -1,0 +1,8 @@
+{
+  "name": "melichar",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "imapflow": "^1.7.8"
+  }
+}
