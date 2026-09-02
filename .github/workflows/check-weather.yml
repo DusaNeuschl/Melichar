@@ -1,0 +1,48 @@
+name: Avokádo Guard - Weather Check
+
+on:
+  schedule:
+    # Approx. 07:00 / 12:00 / 16:00 Europe/Prague. UTC offset drifts +-1h with DST.
+    - cron: '0 6 * * *'
+    - cron: '0 11 * * *'
+    - cron: '0 15 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Determine run type
+        id: runtype
+        run: |
+          case "${{ github.event.schedule }}" in
+            '0 6 * * *') echo "type=morning" >> "$GITHUB_OUTPUT" ;;
+            '0 11 * * *') echo "type=noon" >> "$GITHUB_OUTPUT" ;;
+            '0 15 * * *') echo "type=evening" >> "$GITHUB_OUTPUT" ;;
+            *) echo "type=manual" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Run weather check
+        env:
+          VIBER_AUTH_TOKEN: ${{ secrets.VIBER_AUTH_TOKEN }}
+          VIBER_RECEIVER_ID: ${{ secrets.VIBER_RECEIVER_ID }}
+          RUN_TYPE: ${{ steps.runtype.outputs.type }}
+          LATITUDE: '49.4376699'
+          LONGITUDE: '17.9046572'
+        run: node scripts/check-weather.mjs
+
+      - name: Commit updated state
+        run: |
+          git config user.name "avokado-guard-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add state.json
+          git diff --cached --quiet || git commit -m "chore: update weather state"
+          git push
