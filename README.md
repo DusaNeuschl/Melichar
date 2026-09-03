@@ -190,3 +190,61 @@ weather-check).
 každú schránku sa len založí vodoznak (žiadny súhrn nepríde, aj keby si
 mal 500 neprečítaných emailov — to je zámer). Pošli si potom testovací
 email a spusti workflow znova — mal by sa objaviť v súhrne.
+
+---
+
+# Kalendár
+
+Tretia funkcia Melichara: sleduje Google kalendár `dushi.mokry@gmail.com`
+vrátane všetkých podkalendárov, ktoré vidí (`calendarList`, teda aj
+zdieľané/prihlásené kalendáre).
+
+- **Ranná agenda** (beh "07:00"): pošle prehľad dnešných udalostí zo
+  všetkých kalendárov, aj keď je prázdny ("Dnes žiadne naplánované
+  udalosti.")
+- **Zmeny** (všetky 3 behy 07:00/12:00/16:00): cez Google Calendar sync
+  token deteguje nové, zrušené, presunuté alebo premenované udalosti od
+  posledného behu a pošle ich, len ak nejaké nastali
+- Pri prvom behu pre každý kalendár sa len založí sync token (baseline) —
+  existujúce udalosti sa nereportujú ako "zmeny"
+
+Používa **rovnaký** Google Cloud OAuth klient (`GOOGLE_CLIENT_ID` /
+`GOOGLE_CLIENT_SECRET`) ako Gmail vyššie, len s novým refresh tokenom pre
+scope Calendar.
+
+## Nastavenie krok za krokom
+
+### 1. Povoľ Calendar API a pridaj scope
+
+1. V tom istom Google Cloud projekte ako pre Gmail (**APIs & Services →
+   Library**) povoľ **Google Calendar API**.
+2. **APIs & Services → OAuth consent screen → Data Access** (alebo Scopes,
+   podľa verzie konzoly) → pridaj scope
+   `https://www.googleapis.com/auth/calendar.readonly`.
+   (Pripomienka: consent screen musí byť už "In production" z nastavenia
+   Gmailu vyššie, inak platí rovnaké obmedzenie 7-dňového refresh tokenu.)
+
+### 2. Refresh token pre kalendár (cez OAuth Playground)
+
+Rovnaký postup ako pri Gmaile, tentokrát so scope pre kalendár, prihlásený
+pod `dushi.mokry@gmail.com`:
+
+1. https://developers.google.com/oauthplayground → ozubené koliesko →
+   "Use your own OAuth credentials" → vlož `Client ID`/`Client Secret`.
+2. Zaškrtni **Calendar API v3 → `https://www.googleapis.com/auth/calendar.readonly`**,
+   Authorize APIs, prihlás sa, potvrď.
+3. Exchange authorization code for tokens → skopíruj **Refresh token** →
+   to je `GOOGLE_CALENDAR_REFRESH_TOKEN`.
+
+### 3. Pridaj secrets do GitHub repa
+
+Pridaj `GOOGLE_CALENDAR_REFRESH_TOKEN` (Settings → Secrets and variables →
+Actions). `GOOGLE_CLIENT_ID` a `GOOGLE_CLIENT_SECRET` už existujú z
+nastavenia Gmailu, `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` tiež.
+
+### 4. Over funkčnosť
+
+**Actions → Melichar - Calendar → Run workflow** (manuálny beh sa vždy
+správa ako "morning", takže hneď pošle dnešnú agendu). Zmeny sa pri tomto
+prvom behu ešte nereportujú (zakladá sa baseline) — over ich tak, že
+niečo v kalendári zmeníš/pridáš a spustíš workflow znova.

@@ -1,0 +1,50 @@
+name: Melichar - Calendar
+
+on:
+  schedule:
+    # Approx. 07:00 / 12:00 / 16:00 Europe/Prague. UTC offset drifts +-1h with DST.
+    # 07:00 run also sends the morning agenda; all three check for changes.
+    - cron: '0 6 * * *'
+    - cron: '0 11 * * *'
+    - cron: '0 15 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Determine run type
+        id: runtype
+        run: |
+          case "${{ github.event.schedule }}" in
+            '0 6 * * *') echo "type=morning" >> "$GITHUB_OUTPUT" ;;
+            '0 11 * * *') echo "type=noon" >> "$GITHUB_OUTPUT" ;;
+            '0 15 * * *') echo "type=evening" >> "$GITHUB_OUTPUT" ;;
+            *) echo "type=manual" >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Run calendar check
+        env:
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          GOOGLE_CALENDAR_REFRESH_TOKEN: ${{ secrets.GOOGLE_CALENDAR_REFRESH_TOKEN }}
+          RUN_TYPE: ${{ steps.runtype.outputs.type }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: node scripts/check-calendar.mjs
+
+      - name: Commit updated state
+        run: |
+          git config user.name "melichar-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add calendar-state.json
+          git diff --cached --quiet || git commit -m "chore: update calendar state"
+          git push
