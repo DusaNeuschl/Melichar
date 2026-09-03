@@ -76,6 +76,12 @@ lokálny súbor (netreba git commit).
 
 # Emailový súhrn
 
+> **Pozastavené:** automatický cron rozvrh je v
+> [check-emails.yml](.github/workflows/check-emails.yml) vypnutý. Kód aj
+> nastavenie zostávajú funkčné, dá sa spustiť manuálne cez
+> **Actions → Melichar - Email Digest → Run workflow**, alebo znova zapnúť
+> odkomentovaním `schedule` bloku vo workflow súbore.
+
 Druhá funkcia Melichara: 3x denne (rovnaký rozvrh ako počasie) skontroluje 4
 schránky, cez Claude (Anthropic API) roztriedi nové emaily na **obchodné
 ponuky** (dostanú krátke AI zhrnutie) a **ostatné** (len sa spočítajú), a

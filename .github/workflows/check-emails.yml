@@ -1,11 +1,12 @@
 name: Melichar - Email Digest
 
 on:
-  schedule:
-    # Approx. 07:00 / 12:00 / 16:00 Europe/Prague. UTC offset drifts +-1h with DST.
-    - cron: '0 6 * * *'
-    - cron: '0 11 * * *'
-    - cron: '0 15 * * *'
+  # Automatický rozvrh je zámerne vypnutý - monitorovanie emailov je pozastavené.
+  # Na opätovné zapnutie odkomentuj schedule blok nižšie.
+  # schedule:
+  #   - cron: '0 6 * * *'
+  #   - cron: '0 11 * * *'
+  #   - cron: '0 15 * * *'
   workflow_dispatch: {}
 
 jobs:
