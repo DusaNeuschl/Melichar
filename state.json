@@ -5,27 +5,27 @@
       "flagged": false
     },
     "2026-09-06": {
-      "min": 10.5,
+      "min": 10.7,
       "flagged": false
     },
     "2026-09-07": {
-      "min": 8.5,
+      "min": 8.6,
       "flagged": true
     },
     "2026-09-08": {
-      "min": 14.2,
+      "min": 13.7,
       "flagged": false
     },
     "2026-09-09": {
-      "min": 14.1,
+      "min": 16.5,
       "flagged": false
     },
     "2026-09-10": {
-      "min": 12.3,
+      "min": 11.7,
       "flagged": false
     },
     "2026-09-11": {
-      "min": 7.7,
+      "min": 9,
       "flagged": true
     }
   }
