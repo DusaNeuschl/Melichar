@@ -1,7 +1,7 @@
 {
   "days": {
     "2026-09-06": {
-      "min": 10.9,
+      "min": 11,
       "flagged": false
     },
     "2026-09-07": {
@@ -9,23 +9,23 @@
       "flagged": true
     },
     "2026-09-08": {
-      "min": 14.1,
+      "min": 14,
       "flagged": false
     },
     "2026-09-09": {
-      "min": 17.7,
+      "min": 16.1,
       "flagged": false
     },
     "2026-09-10": {
-      "min": 12.1,
+      "min": 10.7,
       "flagged": false
     },
     "2026-09-11": {
-      "min": 10.2,
-      "flagged": false
+      "min": 8.9,
+      "flagged": true
     },
     "2026-09-12": {
-      "min": 9.1,
+      "min": 9.5,
       "flagged": true
     }
   }
