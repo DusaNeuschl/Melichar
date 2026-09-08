@@ -5,15 +5,15 @@
       "flagged": false
     },
     "2026-09-09": {
-      "min": 15.9,
+      "min": 16.1,
       "flagged": false
     },
     "2026-09-10": {
-      "min": 11.6,
+      "min": 12.1,
       "flagged": false
     },
     "2026-09-11": {
-      "min": 10.5,
+      "min": 10.1,
       "flagged": false
     },
     "2026-09-12": {
@@ -21,11 +21,11 @@
       "flagged": false
     },
     "2026-09-13": {
-      "min": 11.2,
-      "flagged": false
+      "min": 7.6,
+      "flagged": true
     },
     "2026-09-14": {
-      "min": 9.3,
+      "min": 8.2,
       "flagged": true
     }
   }
