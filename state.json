@@ -1,32 +1,32 @@
 {
   "days": {
     "2026-09-09": {
-      "min": 15.8,
+      "min": 15.6,
       "flagged": false
     },
     "2026-09-10": {
-      "min": 12.3,
+      "min": 12.5,
       "flagged": false
     },
     "2026-09-11": {
-      "min": 10.1,
-      "flagged": false
-    },
-    "2026-09-12": {
-      "min": 7.4,
+      "min": 9.3,
       "flagged": true
     },
-    "2026-09-13": {
+    "2026-09-12": {
       "min": 6.4,
       "flagged": true
     },
+    "2026-09-13": {
+      "min": 6.1,
+      "flagged": true
+    },
     "2026-09-14": {
-      "min": 13.1,
+      "min": 12.8,
       "flagged": false
     },
     "2026-09-15": {
-      "min": 9.1,
-      "flagged": true
+      "min": 10.4,
+      "flagged": false
     }
   }
 }
