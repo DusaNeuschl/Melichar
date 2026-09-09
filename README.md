@@ -122,8 +122,15 @@ app", vieš, že je to toto.
      appku" — to je v poriadku, len klikni "Advanced → Go to Melichar
      (unsafe)".
 4. **APIs & Services → Credentials → Create Credentials → OAuth client ID**,
-   typ **Desktop app**. Dostaneš `Client ID` a `Client Secret` — to sú
-   `GOOGLE_CLIENT_ID` a `GOOGLE_CLIENT_SECRET` (spoločné pre obe schránky).
+   typ **Web application**. Do **Authorized redirect URIs** pridaj
+   `https://developers.google.com/oauthplayground`. Dostaneš `Client ID` a
+   `Client Secret` — to sú `GOOGLE_CLIENT_ID` a `GOOGLE_CLIENT_SECRET`
+   (spoločné pre obe schránky aj pre kalendár).
+
+   **Prečo Web application a nie Desktop app:** refresh tokeny sa tu berú cez
+   OAuth Playground a ten sa autorizuje na svoju vlastnú redirect URI. Desktop
+   app klient povoľuje len `localhost` a redirect URI sa mu nedá nastaviť, takže
+   s Playgroundom nespolupracuje.
 
 ### 2. Refresh token pre každú Gmail schránku (cez OAuth Playground)
 
@@ -133,6 +140,9 @@ prehliadači pod správnym účtom pred krokom 3):
 1. Choď na https://developers.google.com/oauthplayground
 2. Vpravo hore klikni na ozubené koliesko → zaškrtni **"Use your own OAuth
    credentials"** → vlož `Client ID` a `Client Secret` z kroku 1.
+   **Toto zaškrtnutie je kritické.** Bez neho Playground autorizuje pod svojím
+   vlastným Google klientom a vydaný refresh token potom v Actions skončí na
+   `unauthorized_client`, lebo nepatrí k tvojmu `GOOGLE_CLIENT_ID`.
 3. V ľavom paneli nájdi a zaškrtni **Gmail API v1 → `https://www.googleapis.com/auth/gmail.readonly`**,
    klikni **Authorize APIs**, prihlás sa pod danou schránkou, potvrď.
 4. Klikni **Exchange authorization code for tokens**.
@@ -230,7 +240,8 @@ Rovnaký postup ako pri Gmaile, tentokrát so scope pre kalendár, prihlásený
 pod `dushi.mokry@gmail.com`:
 
 1. https://developers.google.com/oauthplayground → ozubené koliesko →
-   "Use your own OAuth credentials" → vlož `Client ID`/`Client Secret`.
+   zaškrtni **"Use your own OAuth credentials"** → vlož `Client ID`/`Client
+   Secret` (rovnaké ako pri Gmaile; zaškrtnutie musí zostať aktívne).
 2. Zaškrtni **Calendar API v3 → `https://www.googleapis.com/auth/calendar.readonly`**,
    Authorize APIs, prihlás sa, potvrď.
 3. Exchange authorization code for tokens → skopíruj **Refresh token** →
@@ -248,3 +259,28 @@ nastavenia Gmailu, `TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` tiež.
 správa ako "morning", takže hneď pošle dnešnú agendu). Zmeny sa pri tomto
 prvom behu ešte nereportujú (zakladá sa baseline) — over ich tak, že
 niečo v kalendári zmeníš/pridáš a spustíš workflow znova.
+
+### 5. Riešenie problémov s Google prihlásením
+
+Keď workflow spadne na `Google token refresh failed`, spusti lokálne
+diagnostiku — vypíše, ktorá z troch hodnôt je zlá, a nič nikam neposiela:
+
+```powershell
+$env:GOOGLE_CLIENT_ID="..."
+$env:GOOGLE_CLIENT_SECRET="..."
+$env:GOOGLE_CALENDAR_REFRESH_TOKEN="..."
+node scripts/setup/diagnose-google-auth.mjs
+```
+
+(Pre Gmail token: `node scripts/setup/diagnose-google-auth.mjs GMAIL_PERSONAL_REFRESH_TOKEN`.)
+
+Čo znamenajú jednotlivé chyby z Google:
+
+| Chyba | Význam | Oprava |
+|---|---|---|
+| `unauthorized_client` | Client ID aj secret sú platné, ale refresh token bol vydaný **inému** OAuth klientovi | Vygeneruj refresh token znova a v Playgrounde maj zaškrtnuté "Use your own OAuth credentials" s tým istým Client ID/Secret, aké sú v GitHub secretoch |
+| `invalid_client` | Klient neexistuje alebo nesedí secret | Skopíruj `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` znova z Google Cloud → Credentials |
+| `invalid_grant` | Token je zrušený alebo expirovaný | Consent screen musí byť "In production" (v "Testing" platí token 7 dní); potom vygeneruj token znova |
+
+Pri kopírovaní do GitHub secretov pozor na koncový newline a úvodzovky —
+diagnostika oboje deteguje.
