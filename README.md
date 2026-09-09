@@ -106,49 +106,97 @@ app", vieš, že je to toto.
 
 ## Nastavenie krok za krokom
 
-### 1. Google Cloud projekt (pre obidve Gmail schránky)
+### 1. Google Cloud projekt (spoločný pre Gmail aj kalendár)
+
+> **Poznámka k novej konzole:** pôvodná jedna stránka *APIs & Services → OAuth
+> consent screen* je dnes rozdelená do sekcie **Google Auth Platform** s
+> položkami **Branding**, **Audience**, **Clients** a **Data access**. Postup
+> nižšie používa nové názvy.
 
 1. Choď na https://console.cloud.google.com, založ nový projekt.
-2. **APIs & Services → Library** → povoľ **Gmail API**.
-3. **APIs & Services → OAuth consent screen**:
-   - User type: External
-   - Vyplň názov appky (napr. "Melichar"), tvoj email
-   - Scopes: pridaj `https://www.googleapis.com/auth/gmail.readonly`
-   - Test users: pridaj `dushi.mokry@gmail.com` a `dneuschl@monetplus.cz`
-   - **Dôležité:** po dokončení choď späť na OAuth consent screen a klikni
-     **"Publish App"** (prepni z "Testing" na "In production"). Bez tohto
-     kroku Google zruší refresh token po 7 dňoch. Pri "In production" bez
-     verifikácie uvidíš pri prihlásení varovanie "Google neoveril túto
-     appku" — to je v poriadku, len klikni "Advanced → Go to Melichar
-     (unsafe)".
-4. **APIs & Services → Credentials → Create Credentials → OAuth client ID**,
-   typ **Web application**. Do **Authorized redirect URIs** pridaj
-   `https://developers.google.com/oauthplayground`. Dostaneš `Client ID` a
-   `Client Secret` — to sú `GOOGLE_CLIENT_ID` a `GOOGLE_CLIENT_SECRET`
-   (spoločné pre obe schránky aj pre kalendár).
+2. **APIs & Services → Library** → povoľ **Gmail API** a **Google Calendar API**.
+3. **Google Auth Platform → Branding** — vyplň tri povinné polia:
+   - **App name**: `Melichar`
+   - **User support email**: tvoj e-mail
+   - **Developer contact information → Email addresses**: tvoj e-mail
+   - logo, home page, privacy policy a authorised domains nechaj prázdne
+   - klikni **Save** a počkaj na hlášku *"Branding changes saved."*
+
+   **Pasca:** keď je **Save** sivé a polia sú pritom vyplnené, neznamená to
+   „uložené" — môže ísť o predvyplnený formulár, ktorý na server nikdy
+   neodišiel. Vynúť uloženie: klikni do **App name**, dopíš znak, zmaž ho →
+   Save zmodrie → ulož. Kým Branding nie je reálne uložený, na stránke
+   Audience svieti *"Your app's OAuth configuration is incomplete"* a
+   **Publish app** je nedostupné.
+4. **Google Auth Platform → Data access → Add or remove scopes** → pridaj
+   `https://www.googleapis.com/auth/gmail.readonly` a
+   `https://www.googleapis.com/auth/calendar.readonly`.
+5. **Google Auth Platform → Audience**:
+   - **User type**: External
+   - **Publishing status** musí byť **In production**. Ak je tam „Testing",
+     klikni **Publish app** → **Confirm**.
+   - Žltý pruh *"Your app requires verification"*, ktorý sa objaví po
+     publikovaní, **ignoruj**. Verifikácia rieši len varovanie „Google hasn't
+     verified this app" pri prihlásení a limit 100 používateľov — na funkčnosť
+     ani na životnosť tokenov nemá vplyv. Appku na review neposielaj a
+     neklikaj **Back to testing**.
+
+   **Prečo je "In production" povinné:** v režime Testing Google ruší refresh
+   tokeny po 7 dňoch. Spoznáš to podľa poľa `refresh_token_expires_in: 604799`
+   v odpovedi z Playgroundu — pri publikovanej appke toto pole v odpovedi
+   vôbec nie je.
+6. **Google Auth Platform → Clients → Create client**, typ **Web
+   application**. Do **Authorised redirect URIs** pridaj
+   `https://developers.google.com/oauthplayground` (presne takto, bez lomítka
+   na konci). Dostaneš `Client ID` a `Client Secret` — to sú
+   `GOOGLE_CLIENT_ID` a `GOOGLE_CLIENT_SECRET`, spoločné pre obe schránky aj
+   pre kalendár.
 
    **Prečo Web application a nie Desktop app:** refresh tokeny sa tu berú cez
    OAuth Playground a ten sa autorizuje na svoju vlastnú redirect URI. Desktop
    app klient povoľuje len `localhost` a redirect URI sa mu nedá nastaviť, takže
    s Playgroundom nespolupracuje.
 
+   **Client secret si hneď skopíruj** — konzola ho už druhýkrát nezobrazí, dá
+   sa len pridať nový.
+
 ### 2. Refresh token pre každú Gmail schránku (cez OAuth Playground)
+
+<a id="playground"></a>
 
 Opakuj pre `dushi.mokry@gmail.com` aj `dneuschl@monetplus.cz` (prihlás sa v
 prehliadači pod správnym účtom pred krokom 3):
 
 1. Choď na https://developers.google.com/oauthplayground
-2. Vpravo hore klikni na ozubené koliesko → zaškrtni **"Use your own OAuth
-   credentials"** → vlož `Client ID` a `Client Secret` z kroku 1.
-   **Toto zaškrtnutie je kritické.** Bez neho Playground autorizuje pod svojím
-   vlastným Google klientom a vydaný refresh token potom v Actions skončí na
-   `unauthorized_client`, lebo nepatrí k tvojmu `GOOGLE_CLIENT_ID`.
+2. Vpravo hore klikni na ozubené koliesko a nastav:
+   - **Access type**: `Offline` — bez toho nedostaneš refresh token, len access
+   - **Force prompt**: `Consent Screen` — vynúti vydanie nového tokenu
+   - zaškrtni **"Use your own OAuth credentials"** → vlož `Client ID` a
+     `Client Secret` z kroku 1
+   - **Close**
 3. V ľavom paneli nájdi a zaškrtni **Gmail API v1 → `https://www.googleapis.com/auth/gmail.readonly`**,
-   klikni **Authorize APIs**, prihlás sa pod danou schránkou, potvrď.
-4. Klikni **Exchange authorization code for tokens**.
-5. Skopíruj **Refresh token** — pre `dushi.mokry@gmail.com` to je
-   `GMAIL_PERSONAL_REFRESH_TOKEN`, pre `dneuschl@monetplus.cz` to je
+   klikni **Authorize APIs**, prihlás sa pod danou schránkou, potvrď
+   (varovanie „Google hasn't verified this app" → **Advanced** → **Go to
+   Melichar (unsafe)**).
+4. **Než klikneš Exchange, skontroluj pravý panel.** V riadku `Location:`
+   toho `302 Found` musí byť **tvoje** `client_id=...`. Ak je tam
+   `client_id=407408718192.apps.googleusercontent.com`, je to vlastný klient
+   Playgroundu — pozri pascu nižšie.
+5. Klikni **Exchange authorization code for tokens**.
+6. V odpovedi skontroluj, že **nie je** prítomné pole
+   `refresh_token_expires_in`. Ak tam je, appka nie je publikovaná (krok 1, bod 5) a
+   token by o 7 dní zomrel.
+7. Skopíruj **`refresh_token`** (začína `1//`) — pre `dushi.mokry@gmail.com` to
+   je `GMAIL_PERSONAL_REFRESH_TOKEN`, pre `dneuschl@monetplus.cz` to je
    `GMAIL_WORK_REFRESH_TOKEN`.
+
+**Pasca — Playground si nastavenia neuchová.** Konfigurácia v ozubenom koliesku
+žije len v aktuálnej session. Po reloade stránky (napr. keď medzitým odvoláš
+prístup na myaccount.google.com) sa **"Use your own OAuth credentials" ticho
+odškrtne** a Playground autorizuje pod svojím vlastným klientom
+`407408718192`. Takto vydaný refresh token potom v Actions skončí na
+`unauthorized_client`. Preto tá kontrola `client_id` v kroku 4 — trvá dve
+sekundy a ušetrí celé kolo cez GitHub Actions.
 
 ### 3. Azure app registration + refresh token pre Outlook
 
@@ -185,21 +233,66 @@ prehliadači pod správnym účtom pred krokom 3):
 
 ### 6. Pridaj secrets do GitHub repa
 
-V repe **Settings → Secrets and variables → Actions → New repository
-secret**, pridaj všetkých 10:
+V repe **Settings → Secrets and variables → Actions → New repository secret**.
 
-`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GMAIL_PERSONAL_REFRESH_TOKEN`,
-`GMAIL_WORK_REFRESH_TOKEN`, `MS_CLIENT_ID`, `OUTLOOK_REFRESH_TOKEN`,
-`SEZNAM_IMAP_USER`, `SEZNAM_IMAP_PASSWORD`, `ANTHROPIC_API_KEY` — plus už
-existujúce `TELEGRAM_BOT_TOKEN` a `TELEGRAM_CHAT_ID` (zdieľané s
-weather-check).
+**Schránky sa dajú zapínať postupne.** Skript preskočí každú schránku, ku
+ktorej nie sú vyplnené secrets — nenahlási to ako chybu a beh zostane zelený.
+Nemusíš teda mať naraz všetko; stačí začať jednou a ďalšie dopĺňať neskôr.
+
+| Zdroj | Potrebné secrets |
+|---|---|
+| Gmail `dushi.mokry@gmail.com` | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GMAIL_PERSONAL_REFRESH_TOKEN` |
+| Gmail `dneuschl@monetplus.cz` | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GMAIL_WORK_REFRESH_TOKEN` |
+| Outlook `neuschl.dusan@outlook.cz` | `MS_CLIENT_ID`, `OUTLOOK_REFRESH_TOKEN` |
+| Seznam `reaminator@email.cz` | `SEZNAM_IMAP_USER`, `SEZNAM_IMAP_PASSWORD` |
+
+Navyše treba `ANTHROPIC_API_KEY` (triedenie emailov) a
+`TELEGRAM_BOT_TOKEN`/`TELEGRAM_CHAT_ID` (odosielanie, zdieľané s
+weather-checkom). Bez Anthropic kľúča príde súhrn ako holý zoznam predmetov
+namiesto roztriedeného.
 
 ### 7. Over funkčnosť
 
-**Actions → Melichar - Email Digest → Run workflow.** Pri prvom behu pre
+Najprv lokálne — diagnostika otestuje každý zdroj samostatne, nič neodošle a
+nič nezapíše do `email-state.json`:
+
+```powershell
+$env:GOOGLE_CLIENT_ID="..."
+$env:GOOGLE_CLIENT_SECRET="..."
+$env:GMAIL_PERSONAL_REFRESH_TOKEN="1//..."
+# ...a ďalšie podľa toho, ktoré schránky zapínaš
+node scripts/setup/diagnose-email.mjs
+```
+
+Vypíše tabuľku `OK` / `CHYBA` / `PRESKOČENÉ` pre všetky štyri schránky aj pre
+Anthropic API. Pri Gmaile overí navyše, či token patrí správnemu klientovi
+**aj správnej schránke** — chytí teda aj to, keď si sa v Playgrounde omylom
+prihlásil pod druhým účtom.
+
+Potom **Actions → Melichar - Email Digest → Run workflow.** Pri prvom behu pre
 každú schránku sa len založí vodoznak (žiadny súhrn nepríde, aj keby si
 mal 500 neprečítaných emailov — to je zámer). Pošli si potom testovací
 email a spusti workflow znova — mal by sa objaviť v súhrne.
+
+### 8. Zapni automatický rozvrh
+
+V `.github/workflows/check-emails.yml` je `schedule` blok zakomentovaný.
+Odkomentuj ho, až keď ti manuálny beh chodí správne.
+
+### Ako sa skript správa pri výpadkoch
+
+Štyri schránky sú štyri nezávislé externé systémy, takže každá beží izolovane:
+
+- **nenakonfigurovaná** (chýbajúce secrets) → ticho preskočená, beh zelený
+- **nakonfigurovaná, ale zlyhá** → ostatné schránky pokračujú, vodoznaky
+  úspešných sa uložia, a na konci telegramovej správy pribudne sekcia
+  `⚠️ Nedostupné zdroje` s dôvodom; beh skončí červený, aby to bolo vidieť aj
+  v Actions
+- **zlyhá triedenie cez Claude** → pošle sa aspoň holý zoznam predmetov
+
+Preto má krok „Commit updated state" vo workflowe `if: always()` — bez toho by
+sa pri čiastočnom zlyhaní vodoznaky nezacommitovali a správy úspešných schránok
+by prišli pri ďalšom behu znova.
 
 ---
 
@@ -228,24 +321,33 @@ scope Calendar.
 
 1. V tom istom Google Cloud projekte ako pre Gmail (**APIs & Services →
    Library**) povoľ **Google Calendar API**.
-2. **APIs & Services → OAuth consent screen → Data Access** (alebo Scopes,
-   podľa verzie konzoly) → pridaj scope
+2. **Google Auth Platform → Data access → Add or remove scopes** → pridaj
    `https://www.googleapis.com/auth/calendar.readonly`.
-   (Pripomienka: consent screen musí byť už "In production" z nastavenia
-   Gmailu vyššie, inak platí rovnaké obmedzenie 7-dňového refresh tokenu.)
+3. Over na **Google Auth Platform → Audience**, že **Publishing status** je
+   **In production**. Ak je tam „Testing", refresh token vydrží len 7 dní —
+   postup publikovania je v kroku 1 nastavenia Gmailu vyššie.
 
 ### 2. Refresh token pre kalendár (cez OAuth Playground)
 
-Rovnaký postup ako pri Gmaile, tentokrát so scope pre kalendár, prihlásený
-pod `dushi.mokry@gmail.com`:
+Prihlás sa v prehliadači pod `dushi.mokry@gmail.com` a postupuj presne podľa
+[kroku 2 pri Gmaile](#playground) vrátane oboch kontrol
+(`client_id` v 302 redirecte a neprítomnosť `refresh_token_expires_in`), len
+namiesto Gmail scope zaškrtni **Calendar API v3 →
+`https://www.googleapis.com/auth/calendar.readonly`**.
 
-1. https://developers.google.com/oauthplayground → ozubené koliesko →
-   zaškrtni **"Use your own OAuth credentials"** → vlož `Client ID`/`Client
-   Secret` (rovnaké ako pri Gmaile; zaškrtnutie musí zostať aktívne).
-2. Zaškrtni **Calendar API v3 → `https://www.googleapis.com/auth/calendar.readonly`**,
-   Authorize APIs, prihlás sa, potvrď.
-3. Exchange authorization code for tokens → skopíruj **Refresh token** →
-   to je `GOOGLE_CALENDAR_REFRESH_TOKEN`.
+Výsledný `refresh_token` je `GOOGLE_CALENDAR_REFRESH_TOKEN`.
+
+Pred uložením do GitHub secretov si to over lokálne — ušetríš kolo cez Actions:
+
+```powershell
+$env:GOOGLE_CLIENT_ID="..."
+$env:GOOGLE_CLIENT_SECRET="..."
+$env:GOOGLE_CALENDAR_REFRESH_TOKEN="1//..."
+node scripts/setup/diagnose-google-auth.mjs
+```
+
+Musí vypísať `OK — access token získaný` a `tokeninfo.aud` zhodné s tvojím
+Client ID.
 
 ### 3. Pridaj secrets do GitHub repa
 
@@ -279,8 +381,20 @@ node scripts/setup/diagnose-google-auth.mjs
 | Chyba | Význam | Oprava |
 |---|---|---|
 | `unauthorized_client` | Client ID aj secret sú platné, ale refresh token bol vydaný **inému** OAuth klientovi | Vygeneruj refresh token znova a v Playgrounde maj zaškrtnuté "Use your own OAuth credentials" s tým istým Client ID/Secret, aké sú v GitHub secretoch |
-| `invalid_client` | Klient neexistuje alebo nesedí secret | Skopíruj `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` znova z Google Cloud → Credentials |
-| `invalid_grant` | Token je zrušený alebo expirovaný | Consent screen musí byť "In production" (v "Testing" platí token 7 dní); potom vygeneruj token znova |
+| `invalid_client` | Klient neexistuje alebo nesedí secret | Skopíruj `GOOGLE_CLIENT_ID`/`GOOGLE_CLIENT_SECRET` znova z Google Auth Platform → Clients |
+| `invalid_grant` | Token je zrušený alebo expirovaný | Google Auth Platform → Audience musí byť "In production" (v "Testing" platí token 7 dní); potom vygeneruj token znova |
 
 Pri kopírovaní do GitHub secretov pozor na koncový newline a úvodzovky —
 diagnostika oboje deteguje.
+
+**Chyba sa zmenila = posun dopredu.** Tieto tri chyby sú tri rôzne problémy,
+nie ten istý. Prechod z `unauthorized_client` na `invalid_grant` znamená, že
+dvojica Client ID + Secret je už v poriadku a zostáva doriešiť samotný token.
+
+**Keď zmažeš OAuth klienta**, prestanú platiť **všetky** refresh tokeny, ktoré
+vydal — teda `GOOGLE_CALENDAR_REFRESH_TOKEN` aj oba Gmail tokeny. Treba
+pregenerovať všetky, ktoré používaš.
+
+**Stack trace prezradí, ktorá verzia kódu bežala.** Keď riadok v chybe
+nesedí s aktuálnym `scripts/lib/google-auth.mjs`, pozeráš sa na starý beh z
+času pred pushom, nie na aktuálny stav.

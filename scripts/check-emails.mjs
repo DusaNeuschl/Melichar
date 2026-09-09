@@ -43,12 +43,33 @@ async function main() {
   const state = await loadState();
   const allNewEmails = [];
   const stateUpdates = {};
+  const failures = [];
 
-  // Gmail: dushi.mokry@gmail.com
-  {
-    const key = 'gmail:dushi.mokry@gmail.com';
+  // Každá schránka je samostatný externý systém, ktorý môže vypadnúť nezávisle
+  // od ostatných. Zlyhanie jednej sa preto zbiera a beh pokračuje ďalej, aby
+  // výpadok jedného zdroja nezobral súhrn zo zvyšných troch.
+  //
+  // Nenakonfigurovaná schránka (chýbajúce secrets) sa ticho preskočí a nepočíta
+  // sa ako zlyhanie - schránky sa dajú zapínať postupne, jedna po druhej, bez
+  // toho, aby zvyšné hlásili chybu pri každom behu.
+  async function source(key, needs, run) {
+    const missing = needs.filter((n) => !process.env[n]);
+    if (missing.length) {
+      console.log(`[${key}] preskočené, nenakonfigurované (chýba ${missing.join(', ')})`);
+      return;
+    }
     const prev = state.mailboxes[key] || {};
-    const isBaseline = !prev.processedIds;
+    try {
+      const { emails, update, isBaseline } = await run(prev);
+      if (!isBaseline) allNewEmails.push(...emails);
+      stateUpdates[key] = update;
+    } catch (err) {
+      failures.push({ key, message: err.message });
+      console.error(`[${key}] ${err.message}`);
+    }
+  }
+
+  await source('gmail:dushi.mokry@gmail.com', ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GMAIL_PERSONAL_REFRESH_TOKEN'], async (prev) => {
     const { emails, newProcessedIds } = await fetchNewGmailMessages({
       label: 'dushi.mokry@gmail.com',
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -56,15 +77,10 @@ async function main() {
       refreshToken: process.env.GMAIL_PERSONAL_REFRESH_TOKEN,
       processedIds: prev.processedIds,
     });
-    if (!isBaseline) allNewEmails.push(...emails);
-    stateUpdates[key] = { processedIds: newProcessedIds };
-  }
+    return { emails, update: { processedIds: newProcessedIds }, isBaseline: !prev.processedIds };
+  });
 
-  // Gmail (Google Workspace): dneuschl@monetplus.cz
-  {
-    const key = 'gmail:dneuschl@monetplus.cz';
-    const prev = state.mailboxes[key] || {};
-    const isBaseline = !prev.processedIds;
+  await source('gmail:dneuschl@monetplus.cz', ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET', 'GMAIL_WORK_REFRESH_TOKEN'], async (prev) => {
     const { emails, newProcessedIds } = await fetchNewGmailMessages({
       label: 'dneuschl@monetplus.cz',
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -72,31 +88,20 @@ async function main() {
       refreshToken: process.env.GMAIL_WORK_REFRESH_TOKEN,
       processedIds: prev.processedIds,
     });
-    if (!isBaseline) allNewEmails.push(...emails);
-    stateUpdates[key] = { processedIds: newProcessedIds };
-  }
+    return { emails, update: { processedIds: newProcessedIds }, isBaseline: !prev.processedIds };
+  });
 
-  // Outlook: neuschl.dusan@outlook.cz
-  {
-    const key = 'outlook:neuschl.dusan@outlook.cz';
-    const prev = state.mailboxes[key] || {};
-    const isBaseline = !prev.lastCheck;
-    const lastCheck = prev.lastCheck || new Date().toISOString();
+  await source('outlook:neuschl.dusan@outlook.cz', ['MS_CLIENT_ID', 'OUTLOOK_REFRESH_TOKEN'], async (prev) => {
     const { emails, newLastCheck } = await fetchNewOutlookMessages({
       label: 'neuschl.dusan@outlook.cz',
       clientId: process.env.MS_CLIENT_ID,
       refreshToken: process.env.OUTLOOK_REFRESH_TOKEN,
-      lastCheck,
+      lastCheck: prev.lastCheck || new Date().toISOString(),
     });
-    if (!isBaseline) allNewEmails.push(...emails);
-    stateUpdates[key] = { lastCheck: newLastCheck };
-  }
+    return { emails, update: { lastCheck: newLastCheck }, isBaseline: !prev.lastCheck };
+  });
 
-  // IMAP: reaminator@email.cz (Seznam)
-  {
-    const key = 'imap:reaminator@email.cz';
-    const prev = state.mailboxes[key] || {};
-    const isBaseline = prev.lastUid == null;
+  await source('imap:reaminator@email.cz', ['SEZNAM_IMAP_USER', 'SEZNAM_IMAP_PASSWORD'], async (prev) => {
     const { emails, newLastUid } = await fetchNewImapMessages({
       label: 'reaminator@email.cz',
       host: 'imap.seznam.cz',
@@ -105,45 +110,61 @@ async function main() {
       password: process.env.SEZNAM_IMAP_PASSWORD,
       lastUid: prev.lastUid,
     });
-    if (!isBaseline) allNewEmails.push(...emails);
-    stateUpdates[key] = { lastUid: newLastUid };
-  }
+    return { emails, update: { lastUid: newLastUid }, isBaseline: prev.lastUid == null };
+  });
 
+  // Vodoznaky úspešných schránok sa uložia aj vtedy, keď iné zlyhali - inak by
+  // sa ich správy pri ďalšom behu poslali znova.
   for (const [key, value] of Object.entries(stateUpdates)) {
     state.mailboxes[key] = value;
   }
   await saveState(state);
 
-  if (allNewEmails.length === 0) {
-    console.log('No new emails since last check.');
-    return;
-  }
+  const lines = ['📧 Melichar — emaily'];
 
-  const classifications = await classifyEmails(allNewEmails);
+  if (allNewEmails.length > 0) {
+    const offers = [];
+    let otherCount = 0;
+    try {
+      for (const c of await classifyEmails(allNewEmails)) {
+        const email = allNewEmails[c.index];
+        if (!email) continue;
+        if (c.category === 'ponuka') {
+          offers.push({ from: email.from, summary: c.summary || email.subject });
+        } else {
+          otherCount += 1;
+        }
+      }
+    } catch (err) {
+      // Bez klasifikácie je lepšie poslať holý zoznam než nič.
+      failures.push({ key: 'klasifikácia', message: err.message });
+      console.error(`[klasifikácia] ${err.message}`);
+      lines.push('', `Nové emaily (${allNewEmails.length}), neroztriedené:`);
+      allNewEmails.forEach((e, i) => lines.push(`${i + 1}. [${e.from}] ${e.subject}`));
+    }
 
-  const offers = [];
-  let otherCount = 0;
-  for (const c of classifications) {
-    const email = allNewEmails[c.index];
-    if (!email) continue;
-    if (c.category === 'ponuka') {
-      offers.push({ from: email.from, summary: c.summary || email.subject });
-    } else {
-      otherCount += 1;
+    if (offers.length) {
+      lines.push('', `Obchodné ponuky (${offers.length}):`);
+      offers.forEach((o, i) => lines.push(`${i + 1}. [${o.from}] ${o.summary}`));
+    }
+    if (otherCount) {
+      lines.push('', `Ostatné: +${otherCount} iných emailov`);
     }
   }
 
-  const lines = ['📧 Melichar — emaily'];
-  if (offers.length) {
-    lines.push('', `Obchodné ponuky (${offers.length}):`);
-    offers.forEach((o, i) => lines.push(`${i + 1}. [${o.from}] ${o.summary}`));
-  }
-  if (otherCount) {
-    lines.push('', `Ostatné: +${otherCount} iných emailov`);
+  if (failures.length) {
+    lines.push('', `⚠️ Nedostupné zdroje (${failures.length}):`);
+    failures.forEach((f) => lines.push(`- ${f.key}: ${f.message.slice(0, 200)}`));
   }
 
-  await sendTelegramMessage(lines.join('\n'));
-  console.log(`Sent digest: ${offers.length} offers, ${otherCount} other.`);
+  if (lines.length > 1) {
+    await sendTelegramMessage(lines.join('\n'));
+  } else {
+    console.log('No new emails since last check.');
+  }
+
+  console.log(`Sources failed: ${failures.length}, new emails: ${allNewEmails.length}.`);
+  if (failures.length) process.exitCode = 1;
 }
 
 main().catch((err) => {
