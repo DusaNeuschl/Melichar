@@ -302,14 +302,32 @@ Tretia funkcia Melichara: sleduje Google kalendár `dushi.mokry@gmail.com`
 vrátane všetkých podkalendárov, ktoré vidí (`calendarList`, teda aj
 zdieľané/prihlásené kalendáre).
 
-- **Ranná agenda** (beh "07:00"): pošle prehľad dnešných udalostí zo
-  všetkých kalendárov, aj keď je prázdny ("Dnes žiadne naplánované
-  udalosti.")
-- **Zmeny** (všetky 3 behy 07:00/12:00/16:00): cez Google Calendar sync
-  token deteguje nové, zrušené, presunuté alebo premenované udalosti od
-  posledného behu a pošle ich, len ak nejaké nastali
+- **Ranná agenda:** každé ráno o **07:00 Europe/Prague** (celoročne, letný aj
+  zimný čas) pošle prehľad dnešných udalostí zo všetkých kalendárov — aj keď
+  je deň prázdny („Dnes žiadne naplánované udalosti.")
+- **Zmeny** (všetky behy, cca 07:00/08:00/13:00/17:00 letného času): cez
+  Google Calendar sync token deteguje nové, zrušené, presunuté alebo
+  premenované udalosti od posledného behu a pošle ich, len ak nejaké nastali
 - Pri prvom behu pre každý kalendár sa len založí sync token (baseline) —
   existujúce udalosti sa nereportujú ako "zmeny"
+
+### Ako je zaručené 07:00 celoročne
+
+GitHub Actions cron beží v UTC, ktoré neposúva letný čas — jeden pevný výraz
+by preto polroka trafil 07:00 a polroka 08:00. Riešenie:
+
+- workflow má **dva ranné crony** — `0 5 * * *` (= 07:00 v lete) a
+  `0 6 * * *` (= 07:00 v zime),
+- ktorý z nich agendu naozaj pošle, rozhoduje **skript podľa času v Prahe**:
+  pošle ju pri prvom behu **od 07:00 miestneho času** a najviac **raz za deň**
+  (dátum posledného odoslania drží `lastAgendaDate` v `calendar-state.json`).
+
+Vďaka tomu agenda nevypadne, ani keď sa cron oneskorí (bežná vec na GitHub
+Actions) alebo mu beh úplne preskočí — pošle ju nasledujúci beh v ten istý deň.
+Hodinu sa dá zmeniť premennou `AGENDA_HOUR` (predvolene `7`).
+
+Manuálny beh (**Run workflow**) agendu pošle vždy a `lastAgendaDate`
+nemení — testovanie ti tak nezoberie skutočnú rannú správu.
 
 Používa **rovnaký** Google Cloud OAuth klient (`GOOGLE_CLIENT_ID` /
 `GOOGLE_CLIENT_SECRET`) ako Gmail vyššie, len s novým refresh tokenom pre

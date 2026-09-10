@@ -2,9 +2,13 @@ name: Melichar - Calendar
 
 on:
   schedule:
-    # Approx. 07:00 / 12:00 / 16:00 Europe/Prague. UTC offset drifts +-1h with DST.
-    # 07:00 run also sends the morning agenda; all three check for changes.
+    # Cron na GitHub Actions bezi v UTC, ktore neposuva letny cas - preto su
+    # rana dve: 05:00 UTC = 07:00 Prahy v lete, 06:00 UTC = 07:00 Prahy v zime.
+    # Ktory z nich posle dennu agendu rozhoduje skript podla miestneho casu
+    # (prvy beh od 07:00 Prahy, raz za den) - druhy beh je uz len kontrola zmien.
+    - cron: '0 5 * * *'
     - cron: '0 6 * * *'
+    # Poobede a podvecer - iba kontrola zmien.
     - cron: '0 11 * * *'
     - cron: '0 15 * * *'
   workflow_dispatch: {}
@@ -21,22 +25,12 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Determine run type
-        id: runtype
-        run: |
-          case "${{ github.event.schedule }}" in
-            '0 6 * * *') echo "type=morning" >> "$GITHUB_OUTPUT" ;;
-            '0 11 * * *') echo "type=noon" >> "$GITHUB_OUTPUT" ;;
-            '0 15 * * *') echo "type=evening" >> "$GITHUB_OUTPUT" ;;
-            *) echo "type=manual" >> "$GITHUB_OUTPUT" ;;
-          esac
-
       - name: Run calendar check
         env:
           GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
           GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
           GOOGLE_CALENDAR_REFRESH_TOKEN: ${{ secrets.GOOGLE_CALENDAR_REFRESH_TOKEN }}
-          RUN_TYPE: ${{ steps.runtype.outputs.type }}
+          RUN_TYPE: ${{ github.event_name == 'schedule' && 'scheduled' || 'manual' }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: node scripts/check-calendar.mjs

@@ -5,8 +5,46 @@ import { listCalendars, fetchDayAgenda, syncCalendar } from './lib/calendar.mjs'
 
 const STATE_PATH = fileURLToPath(new URL('../calendar-state.json', import.meta.url));
 const runType = process.env.RUN_TYPE || 'manual';
-const isMorningRun = runType === 'morning' || runType === 'manual';
 const CACHE_MAX_AGE_MS = 7 * 24 * 3600 * 1000;
+const AGENDA_HOUR = Number(process.env.AGENDA_HOUR || 7);
+
+// Runner bezi v UTC, uzivatel zije v Europe/Prague - vsetky "dnes"/"kolko je hodin"
+// rozhodnutia musia ist cez tuto zonu, inak sa v lete posunu o hodinu.
+export function pragueParts(d = new Date()) {
+  const parts = Object.fromEntries(
+    new Intl.DateTimeFormat('en-CA', {
+      timeZone: 'Europe/Prague',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      hourCycle: 'h23',
+    })
+      .formatToParts(d)
+      .map((x) => [x.type, x.value])
+  );
+  return { date: `${parts.year}-${parts.month}-${parts.day}`, hour: Number(parts.hour) };
+}
+
+// "+02:00" / "+01:00" podla toho, ci prave plati letny cas.
+export function pragueOffset(d = new Date()) {
+  const name = new Intl.DateTimeFormat('en-US', {
+    timeZone: 'Europe/Prague',
+    timeZoneName: 'longOffset',
+  })
+    .formatToParts(d)
+    .find((x) => x.type === 'timeZoneName').value;
+  return name.replace('GMT', '') || '+00:00';
+}
+
+// Agenda sa posiela raz za den, pri prvom behu od AGENDA_HOUR miestneho casu.
+// Nie je naviazana na konkretny cron vyraz zamerne: GitHub Actions cron sa
+// bezne oneskoruje o desiatky minut a pri fixnom mapovani by sprava vypadla.
+export function shouldSendAgenda(state, now) {
+  if (runType === 'manual') return true;
+  const { date, hour } = pragueParts(now);
+  return hour >= AGENDA_HOUR && state.lastAgendaDate !== date;
+}
 
 async function loadState() {
   try {
@@ -53,16 +91,17 @@ function startKey(ev) {
   return ev.start?.dateTime || ev.start?.date || '';
 }
 
-async function runMorningAgenda(accessToken, calendars) {
-  const now = new Date();
-  const startOfDay = new Date(now);
-  startOfDay.setHours(0, 0, 0, 0);
-  const endOfDay = new Date(now);
-  endOfDay.setHours(23, 59, 59, 999);
+async function runMorningAgenda(accessToken, calendars, now = new Date()) {
+  // Hranice dna sa pocitaju v Prahe, nie v UTC casu runnera - inak by agenda
+  // zacinala o 02:00 a pretiekla do nasledujuceho dna.
+  const { date } = pragueParts(now);
+  const offset = pragueOffset(now);
+  const startOfDay = `${date}T00:00:00${offset}`;
+  const endOfDay = `${date}T23:59:59${offset}`;
 
   const agendaLines = [];
   for (const cal of calendars) {
-    const events = await fetchDayAgenda(accessToken, cal.id, startOfDay.toISOString(), endOfDay.toISOString());
+    const events = await fetchDayAgenda(accessToken, cal.id, startOfDay, endOfDay);
     for (const ev of events) {
       if (ev.status === 'cancelled') continue;
       agendaLines.push({
@@ -163,8 +202,16 @@ async function main() {
   const calendars = await listCalendars(accessToken);
   const state = await loadState();
 
-  if (isMorningRun) {
-    await runMorningAgenda(accessToken, calendars);
+  const now = new Date();
+  const sendAgenda = shouldSendAgenda(state, now);
+  if (sendAgenda) {
+    await runMorningAgenda(accessToken, calendars, now);
+    // Zapise sa hned po odoslani, nie az na konci behu: keby detekcia zmien
+    // spadla, nasledujuci beh by agendu poslal druhy raz.
+    if (runType !== 'manual') {
+      state.lastAgendaDate = pragueParts(now).date;
+      await saveState(state);
+    }
   }
 
   const changeLines = await runChangeDetection(accessToken, calendars, state);
@@ -174,10 +221,14 @@ async function main() {
     await sendTelegramMessage(['📅 Melichar — zmeny v kalendári', '', ...changeLines].join('\n'));
   }
 
-  console.log(`Calendar check done. Morning agenda sent: ${isMorningRun}. Changes: ${changeLines.length}.`);
+  console.log(`Calendar check done. Morning agenda sent: ${sendAgenda}. Changes: ${changeLines.length}.`);
 }
 
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+// Pri importe (napr. z overovacieho skriptu) sa main nespusti - iba pri
+// priamom spusteni cez `node scripts/check-calendar.mjs`.
+if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
+  main().catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+}
