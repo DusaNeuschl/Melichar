@@ -1021,7 +1021,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CP-r8NmC35YDEP-r8NmC35YDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CO_kqMvr45YDEO_kqMvr45YDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -37712,11 +37712,16 @@
           "summary": "Hasiči",
           "start": "2040-08-28T16:00:00+02:00",
           "calendar": "Společný kalendář"
+        },
+        "4gnguu1182hll6msg2d0uo5pue": {
+          "summary": "dentalna hygiena",
+          "start": "2026-10-26T08:00:00+01:00",
+          "calendar": "Společný kalendář"
         }
       }
     },
     "dushi.mokry@gmail.com": {
-      "syncToken": "CI_6xsWK0pYDEI_6xsWK0pYDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CO-b9qrr45YDEO-b9qrr45YDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "ccp62p3360oj6b9i6cp62b9kchh6cbb274ojeb9p75im6dhpc8pmacb164_20270629": {
           "summary": "Narozeniny: Tatko Narodeniny",
@@ -38321,14 +38326,9 @@
       }
     },
     "family06214253505377250089@group.calendar.google.com": {
-      "syncToken": "CP-K1-XrzpYDEP-K1-XrzpYDGAUgkOKp0QMokOKp0QM=",
-      "eventCache": {
-        "4gnguu1182hll6msg2d0uo5pue": {
-          "summary": "dentalna hygiena",
-          "start": "2026-10-26T07:00:00Z",
-          "calendar": "Rodinné filmy"
-        }
-      }
+      "syncToken": "CK_1tsXr45YDEK_1tsXr45YDGAUgkOKp0QMokOKp0QM=",
+      "eventCache": {}
     }
-  }
+  },
+  "lastAgendaDate": "2026-09-10"
 }
