@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CO_o7bei_ZUDEO_o7bei_ZUDGAEgj_2S0gMoj_2S0gM=",
+      "syncToken": "CP_Q1c-a5ZYDEP_Q1c-a5ZYDGAEgj_2S0gMoj_2S0gM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -1021,7 +1021,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CO_kqMvr45YDEO_kqMvr45YDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CJ-5oYXG5pYDEJ-5oYXG5pYDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -37716,6 +37716,11 @@
         "4gnguu1182hll6msg2d0uo5pue": {
           "summary": "dentalna hygiena",
           "start": "2026-10-26T08:00:00+01:00",
+          "calendar": "Společný kalendář"
+        },
+        "cgrj2opi64ojcb9l6som4b9k6ks6abb268r3ebb16orjgcj46cr6cdj16o": {
+          "summary": "Kastrace kralika",
+          "start": "2026-09-17T06:40:00+02:00",
           "calendar": "Společný kalendář"
         }
       }
