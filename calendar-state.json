@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CP_Q1c-a5ZYDEP_Q1c-a5ZYDGAEgj_2S0gMoj_2S0gM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgj_2S0gMoj_2S0gM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -1021,7 +1021,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CJ-5oYXG5pYDEJ-5oYXG5pYDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CI-zwuG86JYDEI-zwuG86JYDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -37722,6 +37722,16 @@
           "summary": "Kastrace kralika",
           "start": "2026-09-17T06:40:00+02:00",
           "calendar": "Společný kalendář"
+        },
+        "chijapj2c8p6cb9j60p64b9k6so32b9o74q3cbb364p30dpn64q3id9o60": {
+          "summary": "Přezkoušení Opava- Fili a František",
+          "start": "2026-12-12",
+          "calendar": "Společný kalendář"
+        },
+        "74om4db3c9hm8b9icgqm8b9k6li32b9p70ojeb9g6kpj6opmcosjgpb56g": {
+          "summary": "Tátové + drobotina s vojtom",
+          "start": "2026-11-13",
+          "calendar": "Společný kalendář"
         }
       }
     },
@@ -38335,5 +38345,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-09-11"
+  "lastAgendaDate": "2026-09-12"
 }
