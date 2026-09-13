@@ -1,19 +1,77 @@
 # Melichar
 
-Sleduje 7-dňovú predpoveď počasia pre Oznice 158 (lat 49.4376699, lon 17.9046572)
-a posiela cez Telegram upozornenie, keď má niektorá noc klesnúť pod 10 °C.
+Sleduje predpoveď počasia pre Oznice 158 (lat 49.4376699, lon 17.9046572) a cez
+Telegram hlási, kedy treba vyletnené avokádo v kvetináči presťahovať dnu — a na
+jar, kedy ho môžeš vrátiť von.
 
-- **Kontroly:** 3x denne (~07:00 / 12:00 / 16:00 Europe/Prague, cron beží v UTC takže
-  s DST môže reálny čas skĺznuť o +-1h)
-- **Zdroj počasia:** Open-Meteo (zdarma, bez API kľúča)
+- **Kontroly:** 3x denne (~07:00 / 12:00 / 16:00 Europe/Prague, cron beží v UTC
+  takže s DST môže reálny čas skĺznuť o +-1h; tu to nevadí, rozhodnutie sa týka
+  nadchádzajúcej noci a stačí, aby jeden beh prešiel pred večerom)
+- **Zdroj počasia:** Open-Meteo (zdarma, bez API kľúča) — **hodinové** dáta
+  (`temperature_2m`, `cloud_cover`, `wind_speed_10m`)
 - **Notifikácia:** Telegram Bot API (`sendMessage`) — zdarma, self-service, žiadne
   schvaľovanie ani 24h okno (na rozdiel od WhatsApp/Viber, kde je proaktívne
   posielanie správ mimo session okna zablokované/spoplatnené schválenými šablónami)
-- **Dedup logika:**
-  - Večerný beh (16:00): ak dnešná noc < 10 °C, VŽDY pošle pripomienku
-  - Ktorýkoľvek beh: ak sa zmenila predpoveď pre niektorý z dní +1 až +6
-    (novo klesla pod 10 °C, alebo sa naopak zlepšila), pošle update
 - **Stav** (`state.json`) sa po každom behu commitne späť do repa
+
+## Kedy sa alarm aktivuje
+
+### Noc je okno 18:00 → 09:00, nie kalendárny deň
+
+Pôvodná verzia čítala `temperature_2m_min`, čo je minimum **kalendárneho dňa** —
+a to nastáva nadránom, teda patrí k noci, ktorá **už prebehla**. Večerná
+pripomienka tak hlásila teplotu z dnešného rána namiesto nadchádzajúcej noci.
+Teraz sa z hodinových dát skladá skutočné nočné okno 18:00 → 09:00 a noc sa
+označuje dátumom rána, ktorým končí.
+
+### Radiačné ochladenie
+
+Predpoveď udáva teplotu vzduchu v 2 m v tieni. Za **jasnej bezvetrej noci**
+vyžaruje list teplo do oblohy a býva o niekoľko stupňov chladnejší; kvetináč
+navyše nemá tepelnú zotrvačnosť záhonu. Preto keď je priemerná nočná oblačnosť
+pod `CLEAR_CLOUD_PCT` (30 %) a vietor pod `CALM_WIND_KMH` (10 km/h), odpočíta sa
+od teploty `RADIATIVE_PENALTY_C` (3 °C) a rozhoduje sa podľa tohto odhadu teploty
+na liste. Správa to vždy vypíše, nech je vidieť, prečo alarm padol pri 7,5 °C.
+
+### Prahy
+
+Vychádzajú z toho, ako avokádo reálne znáša chlad — ide o semenáčik v kvetináči,
+vyletnený z bytu, teda mladý a neotužený:
+
+| prah | čo sa stane | čo hrozí rastline |
+|---|---|---|
+| `BRING_IN_C` = 5 °C | „Prines avokádo dnu" + stav sa prepne na *dnu* | pásmo *chilling injury* (4–10 °C) — pri dlhšej expozícii sa poškodzujú listy |
+| `URGENT_C` = 2 °C | „Ak je ešte vonku, musí dnu" | pri radiačnom ochladení už reálne hrozí mráz na liste |
+| `FREEZE_C` = 0 °C | „Mrzne, neprežije to bez poškodenia" | spálené listy, odumieranie výhonov |
+| `PUT_OUT_C` = 8 °C | po `SPRING_RUN_NIGHTS` (7) nociach nad týmto prahom: „môžeš dať von" | — |
+
+Pod ~10 °C avokádo len zastaví rast a ide do dormancie — to mu **neškodí**, preto
+pôvodný prah 10 °C nebol o poškodení. V Oznici navyše padne pod 10 °C **249 nocí
+za rok** (68 % roka, prvá už začiatkom augusta), takže z alarmu bol šum.
+
+### Sezónny stav namiesto nočného spamu
+
+Melichar si v `state.json` drží, či je avokádo podľa neho `outside` alebo
+`inside`, a každý prah ohlási **najviac raz za sezónu** (`alertedBelow`):
+
+```
+jeseň   prvá noc s odhadom na liste <= 5 °C
+        -> "prines dnu", stav = inside, potom ticho
+eskalácia  keď neskôr padne pod 2 °C a pod 0 °C, príde ešte jedno varovanie
+           pre prípad, že si prvú správu prehliadol
+jar     apríl-jún + 7 nocí po sebe nad 8 °C
+        -> "môžeš dať von", stav = outside, milníky sa vynulujú
+```
+
+Vyjde z toho **cca 2–4 správy za rok** namiesto 249. Obmedzenie na apríl–jún je
+poistka, aby avokádo nevyhnal von februárové oteplenie.
+
+Rozhoduje sa z okna **najbližších dvoch nocí** — dosť na to, aby správa prišla
+včas, a málo na to, aby sa hlásilo ochladenie, ktoré je 5 dní ďaleko a ešte sa
+zmení.
+
+Manuálny beh (**Run workflow**) je diagnostika: pošle prehľad nadchádzajúcich
+nocí aj s odhadom na liste a aktuálny stav, a **nič neprepína**.
 
 ## Architektúra
 
@@ -23,11 +81,40 @@ netreba žiadny druhý komponent (na rozdiel od pôvodne zvažovaného Vibera).
 
 ```
 GitHub Actions (cron 3x/deň)
-  -> Open-Meteo forecast (Oznice)
-  -> vyhodnotí prah 10 °C + dedup voči state.json
+  -> Open-Meteo hodinová predpoveď (Oznice)
+  -> poskladá noci 18:00->09:00 + odhad teploty na liste
+  -> porovná s prahmi a sezónnym stavom v state.json
   -> Telegram sendMessage
   -> commitne aktualizovaný state.json
 ```
+
+### Zápis stavu a spoľahlivosť cronu
+
+Všetky tri workflowy commitujú svoj stav cez spoločný
+[.github/commit-state.sh](.github/commit-state.sh). Holý `git push` tam
+nestačí: workflowy píšu do toho istého repa a keď sa dva behy prekryjú, druhému
+pushu zlyhá non-fast-forward — job spadne **až po odoslaní správy**, takže sa
+stratí len zápis stavu a pri ďalšom behu príde tá istá správa znova. (Presne to
+sa stalo 13. 9. 2026 rannej agende.) Skript pri kolízii prerebasuje stav na
+aktuálny `main` a push zopakuje, až 5×.
+
+**Cron nie je presný.** GitHub sám dokumentuje, že naplánované behy sa pri
+záťaži odkladajú a najhorší okamih je začiatok každej hodiny. Na tomto repe boli
+pozorované odklady **2,5–4,5 hodiny**, takže minúty sú zámerne rozhodené mimo
+`:00` a navzájom sa nekryjú:
+
+| workflow | minúta | hodiny (UTC) |
+|---|---|---|
+| počasie | `:07` | 6, 11, 15 |
+| kalendár | `:23` | 5, 6, 7 (ráno) + 11, 15 |
+| emaily | `:41` | (rozvrh vypnutý) |
+
+Ranné sloty kalendára sú tri, aby mala denná agenda viac pokusov trafiť sa čo
+najbližšie k 07:00 — pošle ju ten beh, ktorý sa reálne vykoná ako prvý po
+siedmej. **Presný čas ale GitHub Actions zaručiť nevie**; keď bude treba mať
+agendu naozaj o 07:00, je nutný vlastný scheduler (VPS cron podľa sekcie nižšie,
+alebo externý trigger na `workflow_dispatch`).
+
 
 ## Nastavenie krok za krokom
 
@@ -67,10 +154,34 @@ Stačí presunúť cron logiku: na VPS pridaj `crontab` záznamy volajúce
 `LONGITUDE`) namiesto GitHub Actions cronu, a `state.json` nechaj len ako
 lokálny súbor (netreba git commit).
 
-## Zmena prahovej teploty alebo súradníc
+## Zmena prahov alebo súradníc
 
-`THRESHOLD_C` a súradnice sú v [scripts/check-weather.mjs](scripts/check-weather.mjs)
-(súradnice cez env `LATITUDE`/`LONGITUDE` vo workflow súbore).
+Všetky prahy majú v [scripts/check-weather.mjs](scripts/check-weather.mjs)
+predvolenú hodnotu a dajú sa prebiť env premennou vo workflow súbore, bez
+zásahu do kódu:
+
+| premenná | default | význam |
+|---|---|---|
+| `BRING_IN_C` | 5 | jesenné „prines dnu" |
+| `URGENT_C` | 2 | naliehavé varovanie |
+| `FREEZE_C` | 0 | mráz |
+| `PUT_OUT_C` | 8 | jarné „môžeš dať von" |
+| `SPRING_RUN_NIGHTS` | 7 | koľko teplých nocí po sebe treba na jar |
+| `CLEAR_CLOUD_PCT` | 30 | hranica „jasno" (priemer za noc, %) |
+| `CALM_WIND_KMH` | 10 | hranica „bezvetrie" (priemer za noc, km/h) |
+| `RADIATIVE_PENALTY_C` | 3 | o koľko je list chladnejší za jasnej bezvetrej noci |
+
+Súradnice sú cez env `LATITUDE`/`LONGITUDE` vo workflow súbore.
+
+**Reset sezónneho stavu:** keď chceš Melicharovi povedať, že avokádo je zase
+vonku (alebo dnu), uprav v `state.json` blok `avocado`:
+
+```json
+{ "avocado": { "location": "outside", "since": "2027-05-12", "alertedBelow": [] } }
+```
+
+`alertedBelow` je zoznam už ohlásených prahov v aktuálnej sezóne — vyprázdni ho,
+ak chceš varovania dostať znova.
 
 ---
 

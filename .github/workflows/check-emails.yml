@@ -4,9 +4,7 @@ on:
   # Automatický rozvrh je zámerne vypnutý - monitorovanie emailov je pozastavené.
   # Na opätovné zapnutie odkomentuj schedule blok nižšie.
   # schedule:
-  #   - cron: '0 6 * * *'
-  #   - cron: '0 11 * * *'
-  #   - cron: '0 15 * * *'
+  #   - cron: '41 6,11,15 * * *'
   workflow_dispatch: {}
 
 jobs:
@@ -39,14 +37,9 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: node scripts/check-emails.mjs
 
-      # Beží aj po čiastočnom zlyhaní (skript vracia 1, keď je niektorý zdroj
-      # nedostupný) - vodoznaky úspešných schránok sa inak stratia a ich správy
-      # by prišli pri ďalšom behu znova.
       - name: Commit updated state
+        # Bezi aj po ciastocnom zlyhani (skript vracia 1, ked je niektory zdroj
+        # nedostupny) - vodoznaky uspesnych schranok by sa inak stratili a ich
+        # spravy by prisli pri dalsom behu znova.
         if: always()
-        run: |
-          git config user.name "melichar-bot"
-          git config user.email "actions@users.noreply.github.com"
-          git add email-state.json
-          git diff --cached --quiet || git commit -m "chore: update email state"
-          git push
+        run: bash .github/commit-state.sh email-state.json "chore: update email state"
