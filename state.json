@@ -1,32 +1,11 @@
 {
-  "days": {
-    "2026-09-13": {
-      "min": 8.8,
-      "flagged": true
-    },
-    "2026-09-14": {
-      "min": 12.5,
-      "flagged": false
-    },
-    "2026-09-15": {
-      "min": 12.1,
-      "flagged": false
-    },
-    "2026-09-16": {
-      "min": 12,
-      "flagged": false
-    },
-    "2026-09-17": {
-      "min": 10,
-      "flagged": false
-    },
-    "2026-09-18": {
-      "min": 7.6,
-      "flagged": true
-    },
-    "2026-09-19": {
-      "min": 7.9,
-      "flagged": true
-    }
+  "avocado": {
+    "location": "inside",
+    "since": "2026-09-13",
+    "alertedBelow": [
+      5,
+      2,
+      0
+    ]
   }
 }
