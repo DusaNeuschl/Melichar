@@ -2,14 +2,15 @@ name = "melichar"
 main = "index.mjs"
 compatibility_date = "2026-09-01"
 
-# Nie su tajne - kludne tu mozu byt natvrdo.
+# Repo je verejne, takze tu su len udaje, ktore su aj tak verejne.
+# TELEGRAM_CHAT_ID medzi ne nepatri - nastavuje sa ako secret nizsie.
 [vars]
 GITHUB_REPO = "DusaNeuschl/Melichar"
 LATITUDE = "49.4376699"
 LONGITUDE = "17.9046572"
-TELEGRAM_CHAT_ID = ""   # doplnit rovnaku hodnotu ako v GitHub secrets
 
 # Tajomstva sa nastavuju prikazom, NIE v tomto subore:
 #   wrangler secret put TELEGRAM_BOT_TOKEN
+#   wrangler secret put TELEGRAM_CHAT_ID
 #   wrangler secret put TELEGRAM_WEBHOOK_SECRET
 #   wrangler secret put GITHUB_TOKEN

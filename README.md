@@ -144,24 +144,24 @@ node scripts/setup/set-telegram-webhook.mjs delete   # späť na polling
 
 1. Založ si účet na [Cloudflare](https://dash.cloudflare.com) (free tier stačí)
    a nainštaluj `npm install -g wrangler`, potom `wrangler login`.
-2. Vo `worker/wrangler.toml` doplň `TELEGRAM_CHAT_ID` (tá istá hodnota ako v
-   GitHub secrets).
-3. Vyrob si GitHub token, ktorý smie spúšťať `repository_dispatch` — jemne
+2. Vyrob si GitHub token, ktorý smie spúšťať `repository_dispatch` — jemne
    zrnený token na repo `Melichar` s právom **Contents: Read and write**.
-4. Vymysli si ľubovoľné dlhé náhodné tajomstvo pre webhook (napr.
-   `openssl rand -hex 32`).
-5. Nastav tajomstvá a nasaď:
+3. Vymysli si ľubovoľné dlhé náhodné tajomstvo pre webhook
+   (`openssl rand -hex 32`).
+4. Nastav tajomstvá a nasaď. Chat ID je tiež medzi nimi zámerne — repo je
+   verejné, takže do `wrangler.toml` nepatrí:
 
    ```bash
    cd worker
    wrangler secret put TELEGRAM_BOT_TOKEN
+   wrangler secret put TELEGRAM_CHAT_ID
    wrangler secret put TELEGRAM_WEBHOOK_SECRET
    wrangler secret put GITHUB_TOKEN
    wrangler deploy
    ```
 
    `wrangler deploy` vypíše URL v tvare `https://melichar.<účet>.workers.dev`.
-6. Nasmeruj naň Telegram:
+5. Nasmeruj naň Telegram:
 
    ```powershell
    $env:TELEGRAM_BOT_TOKEN="..."
@@ -169,7 +169,7 @@ node scripts/setup/set-telegram-webhook.mjs delete   # späť na polling
    $env:TELEGRAM_WEBHOOK_SECRET="<to isté tajomstvo>"
    node scripts/setup/set-telegram-webhook.mjs set
    ```
-7. Napíš botovi `/stav`. Odpoveď má prísť do sekundy. Keď nepríde, pozri
+6. Napíš botovi `/stav`. Odpoveď má prísť do sekundy. Keď nepríde, pozri
    `node scripts/setup/set-telegram-webhook.mjs` (vypíše poslednú chybu od
    Telegramu) a `wrangler tail`.
 
