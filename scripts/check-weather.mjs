@@ -186,6 +186,131 @@ export function decide(nights, state, today) {
   return { messages, state: { ...state, avocado } };
 }
 
+// --- Prikazy z Telegramu ---------------------------------------------------
+// Melichar nema webhook (a nepotrebuje ho) - na zaciatku kazdeho behu sa spyta
+// getUpdates, co mu odvtedy prislo. Telegram drzi neprevzate spravy 24 h, co pri
+// troch behoch denne staci.
+
+const COMMAND_WORDS = {
+  inside: ['dnu', 'dovnutra', 'vnutri', 'schoval', 'schovane', 'inside', 'in'],
+  outside: ['von', 'vonku', 'vytiahol', 'vytiahnute', 'outside', 'out'],
+  status: ['stav', 'status'],
+  help: ['help', 'pomoc', 'start'],
+};
+
+const HELP_TEXT = [
+  'Melichar rozumie týmto správam:',
+  '',
+  '/dnu — avokádo som schoval dnu; cez zimu mlč a ozvi sa na jar',
+  '/von — avokádo je zase vonku; sleduj chlad a varuj ma',
+  '/stav — kde je avokádo a aké sú najbližšie noci',
+  '/help — tento zoznam',
+].join('\n');
+
+// Diakritika a velke pismena sa ignoruju, lomka je volitelna, "/dnu@bot" tiez.
+export function parseCommand(text) {
+  if (typeof text !== 'string') return null;
+  const word = text
+    .trim()
+    .split(/\s+/)[0]
+    .replace(/@\S+$/, '')
+    .replace(/^\//, '')
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+  for (const [cmd, words] of Object.entries(COMMAND_WORDS)) {
+    if (words.includes(word)) return cmd;
+  }
+  return null;
+}
+
+export function applyCommand(cmd, state, nights, today) {
+  const avocado = { ...state.avocado, alertedBelow: [...state.avocado.alertedBelow] };
+
+  if (cmd === 'inside') {
+    if (avocado.location === 'inside') {
+      return { state, reply: `Avokádo mám vedené ako dnu už od ${avocado.since || 'neznámeho dátumu'}.` };
+    }
+    avocado.location = 'inside';
+    avocado.since = today;
+    // Jesenne varovania su tym vybavene - uz niet pred cim varovat.
+    avocado.alertedBelow = [...MILESTONES];
+    return {
+      state: { ...state, avocado },
+      reply:
+        '👍 Avokádo je dnu. Cez zimu budem ticho a ozvem sa na jar, keď vyjde ' +
+        `${SPRING_RUN_NIGHTS} nocí po sebe nad ${PUT_OUT_C} °C.`,
+    };
+  }
+
+  if (cmd === 'outside') {
+    if (avocado.location === 'outside') {
+      return { state, reply: `Avokádo mám vedené ako vonku už od ${avocado.since || 'neznámeho dátumu'}.` };
+    }
+    avocado.location = 'outside';
+    avocado.since = today;
+    // Nova sezona vonku - varovania sa zase zapinaju.
+    avocado.alertedBelow = [];
+    const next = nights.find((n) => n.date > today);
+    const outlook = next
+      ? ` Najbližšia noc ${fmtTemp(next.leafMin)}${next.clearCalm ? ' na liste' : ''}.`
+      : '';
+    return {
+      state: { ...state, avocado },
+      reply:
+        `👍 Avokádo je vonku. Zase sledujem chlad a ozvem sa pred prvou nocou ` +
+        `pod ${BRING_IN_C} °C.${outlook}`,
+    };
+  }
+
+  if (cmd === 'status') return { state, reply: buildNightSummary(nights, state, today) };
+  return { state, reply: HELP_TEXT };
+}
+
+async function fetchUpdates(offset) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const url = new URL(`https://api.telegram.org/bot${token}/getUpdates`);
+  if (offset) url.searchParams.set('offset', String(offset));
+  url.searchParams.set('timeout', '0');
+  url.searchParams.set('allowed_updates', JSON.stringify(['message']));
+  const res = await fetch(url);
+  const data = await res.json();
+  if (!data.ok) throw new Error(`Telegram getUpdates failed: ${JSON.stringify(data)}`);
+  return data.result || [];
+}
+
+export async function processCommands(state, nights, today) {
+  const replies = [];
+  let next = state;
+  const offset = next.telegram.lastUpdateId ? next.telegram.lastUpdateId + 1 : null;
+
+  for (const update of await fetchUpdates(offset)) {
+    // Offset sa posuva aj pri sprave, ktoru zahodime - inak by sa citala donekonecna.
+    next = { ...next, telegram: { lastUpdateId: update.update_id } };
+    const message = update.message;
+    if (!message) continue;
+
+    // Bota moze najst ktokolvek - prikazy beriem len z nakonfigurovaneho chatu.
+    if (String(message.chat?.id) !== String(process.env.TELEGRAM_CHAT_ID)) {
+      console.log(`Ignorujem spravu z cudzieho chatu ${message.chat?.id}.`);
+      continue;
+    }
+
+    const cmd = parseCommand(message.text);
+    if (!cmd) {
+      const quoted = (message.text || '').slice(0, 40);
+      replies.push(`Nerozumiem „${quoted}".\n\n${HELP_TEXT}`);
+      continue;
+    }
+
+    const applied = applyCommand(cmd, next, nights, today);
+    next = applied.state;
+    replies.push(applied.reply);
+  }
+
+  return { state: next, replies };
+}
+
 // --- I/O -------------------------------------------------------------------
 async function loadState() {
   let parsed = {};
@@ -199,6 +324,7 @@ async function loadState() {
   delete parsed.days;
   if (!parsed.avocado) parsed.avocado = { location: 'outside', since: null, alertedBelow: [] };
   if (!Array.isArray(parsed.avocado.alertedBelow)) parsed.avocado.alertedBelow = [];
+  if (!parsed.telegram) parsed.telegram = { lastUpdateId: null };
   return parsed;
 }
 
@@ -253,14 +379,23 @@ async function main() {
   const today = pragueToday();
   const loaded = await loadState();
 
+  // 1) Najprv prikazy - keby prisiel "/von", ma sa nasledujuce vyhodnotenie
+  //    urobit uz nad novym stavom.
+  const cmds = await processCommands(loaded, nights, today);
+  for (const reply of cmds.replies) await sendTelegramMessage(reply);
+  // Zapise sa hned: keby dalsi krok spadol, prikaz uz je vybaveny a odpoveda
+  // odoslana - opakovat by sa nemal.
+  if (cmds.replies.length) await saveState(cmds.state);
+
   if (isManualRun) {
-    // Manualny beh je diagnostika - nic neprepina ani neodflaguje.
-    await sendTelegramMessage(buildNightSummary(nights, loaded, today));
-    console.log('Manual run - night summary sent, state unchanged.');
+    // Manualny beh je diagnostika + rucne "sprav to hned" pre prikazy.
+    // Alarmy nevyhodnocuje, aby si testovanim neodflagol milnik.
+    await sendTelegramMessage(buildNightSummary(nights, cmds.state, today));
+    console.log(`Manual run - ${cmds.replies.length} command(s) handled, summary sent.`);
     return;
   }
 
-  const { messages, state } = decide(nights, loaded, today);
+  const { messages, state } = decide(nights, cmds.state, today);
   for (const msg of messages) await sendTelegramMessage(msg);
   await saveState(state);
 

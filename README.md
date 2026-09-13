@@ -70,17 +70,51 @@ Rozhoduje sa z okna **najbližších dvoch nocí** — dosť na to, aby správa 
 včas, a málo na to, aby sa hlásilo ochladenie, ktoré je 5 dní ďaleko a ešte sa
 zmení.
 
-Manuálny beh (**Run workflow**) je diagnostika: pošle prehľad nadchádzajúcich
-nocí aj s odhadom na liste a aktuálny stav, a **nič neprepína**.
+## Prepínanie cez Telegram
+
+Kde je avokádo, rozhoduješ ty — správou botovi. Melichar si na začiatku každého
+behu vyzdvihne, čo mu medzitým prišlo (`getUpdates`), a odpovie:
+
+| správa | čo spraví |
+|---|---|
+| `/dnu` | avokádo je vnútri → cez zimu mlčí, čaká na jar (označí všetky jesenné prahy za vybavené) |
+| `/von` | avokádo je vonku → vynuluje prahy a zase varuje pred chladom |
+| `/stav` | povie, kde avokádo vedie a odkedy, plus prehľad nadchádzajúcich nocí |
+| `/help` | zoznam príkazov |
+
+Lomka je voliteľná, na veľkých písmenách ani diakritike nezáleží a rozumie aj
+synonymám (`schoval`, `vnútri`, `vytiahol`, `vonku`…). Na nezrozumiteľnú správu
+odpovie nápovedou.
+
+**Odpoveď nepríde okamžite.** Príkazy sa spracujú až pri najbližšom behu
+workflowu, teda 3× denne — a s odkladom cronu to môže byť aj pár hodín. Keď to
+potrebuješ hneď, spusti **Actions → Melichar - Weather Check → Run workflow**:
+manuálny beh príkazy spracuje a pošle prehľad nocí, ale **alarmy nevyhodnocuje**,
+aby si testovaním neodflagol milník.
+
+Dve bezpečnostné poistky v kóde:
+
+- Príkazy sa berú **len z chatu v `TELEGRAM_CHAT_ID`**. Bota môže nájsť
+  ktokoľvek, cudzie správy sa zahodia (ale offset sa posunie, inak by sa čítali
+  donekonečna).
+- Prevzaté správy si Melichar značí cez `telegram.lastUpdateId` v `state.json`,
+  takže sa jeden príkaz nespracuje dvakrát. Telegram drží neprevzaté správy
+  **24 hodín** — pri troch behoch denne to vyjde, ale keby boli workflowy dlhšie
+  vypnuté, staršie príkazy sa stratia.
+
+Webhook na to netreba a nič nemusí bežať — `getUpdates` je ťahanie, nie
+počúvanie.
 
 ## Architektúra
 
 Celá logika beží v jednom kroku na GitHub Actions cron — Telegram Bot API
-nevyžaduje žiadny bežiaci webhook pre jednosmerné posielanie správ, takže
-netreba žiadny druhý komponent (na rozdiel od pôvodne zvažovaného Vibera).
+nevyžaduje žiadny bežiaci webhook ani pre posielanie správ, ani pre ich príjem
+(`getUpdates` sa pýta sám), takže netreba žiadny druhý komponent (na rozdiel od
+pôvodne zvažovaného Vibera).
 
 ```
 GitHub Actions (cron 3x/deň)
+  -> Telegram getUpdates (prišiel /dnu, /von, /stav?)
   -> Open-Meteo hodinová predpoveď (Oznice)
   -> poskladá noci 18:00->09:00 + odhad teploty na liste
   -> porovná s prahmi a sezónnym stavom v state.json
@@ -181,7 +215,12 @@ vonku (alebo dnu), uprav v `state.json` blok `avocado`:
 ```
 
 `alertedBelow` je zoznam už ohlásených prahov v aktuálnej sezóne — vyprázdni ho,
-ak chceš varovania dostať znova.
+ak chceš varovania dostať znova. Bežne to ale netreba: na prepínanie slúžia
+správy `/dnu` a `/von` (viď „Prepínanie cez Telegram"), ručný zásah do súboru je
+až núdzová cesta.
+
+`telegram.lastUpdateId` je značka poslednej prevzatej správy z Telegramu.
+Zmazaním sa Melichar pokúsi znova načítať všetko, čo Telegram ešte drží (24 h).
 
 ---
 
