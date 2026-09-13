@@ -14,6 +14,12 @@ on:
     - cron: '7 6,11,15 * * *'
   workflow_dispatch: {}
 
+# Zapisy stavu sa nesmu prekryvat s handle-command.yml - obe menia state.json a
+# posledny zapis by prepisal ten druhy.
+concurrency:
+  group: melichar-state
+  cancel-in-progress: false
+
 jobs:
   check:
     runs-on: ubuntu-latest

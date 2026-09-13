@@ -1,0 +1,36 @@
+name: Melichar - Handle Command
+
+# Spusta ho Cloudflare Worker cez repository_dispatch, ked pride /dnu alebo /von.
+# Odpoved uzivatelovi uz poslal Worker - tu sa len zapise stav do repa.
+on:
+  repository_dispatch:
+    types: [melichar-command]
+
+# Zapisy stavu sa nesmu prekryvat s behom pocasia - obe menia state.json a
+# posledny zapis by prepisal ten druhy. Rovnaku skupinu ma aj check-weather.
+concurrency:
+  group: melichar-state
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Apply command to state
+        env:
+          COMMAND: ${{ github.event.client_payload.command }}
+          COMMAND_DATE: ${{ github.event.client_payload.today }}
+          LATITUDE: '49.4376699'
+          LONGITUDE: '17.9046572'
+        run: node scripts/apply-command.mjs
+
+      - name: Commit updated state
+        run: bash .github/commit-state.sh state.json "chore: avocado ${{ github.event.client_payload.command }} (via Telegram)"

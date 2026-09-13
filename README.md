@@ -12,6 +12,8 @@ jar, kedy ho môžeš vrátiť von.
 - **Notifikácia:** Telegram Bot API (`sendMessage`) — zdarma, self-service, žiadne
   schvaľovanie ani 24h okno (na rozdiel od WhatsApp/Viber, kde je proaktívne
   posielanie správ mimo session okna zablokované/spoplatnené schválenými šablónami)
+- **Príkazy:** Telegram webhook → Cloudflare Worker, odpoveď do sekundy
+  (viď „Prepínanie cez Telegram")
 - **Stav** (`state.json`) sa po každom behu commitne späť do repa
 
 ## Kedy sa alarm aktivuje
@@ -86,35 +88,105 @@ Lomka je voliteľná, na veľkých písmenách ani diakritike nezáleží a rozu
 synonymám (`schoval`, `vnútri`, `vytiahol`, `vonku`…). Na nezrozumiteľnú správu
 odpovie nápovedou.
 
-**Odpoveď nepríde okamžite.** Príkazy sa spracujú až pri najbližšom behu
-workflowu, teda 3× denne — a s odkladom cronu to môže byť aj pár hodín. Keď to
-potrebuješ hneď, spusti **Actions → Melichar - Weather Check → Run workflow**:
-manuálny beh príkazy spracuje a pošle prehľad nocí, ale **alarmy nevyhodnocuje**,
-aby si testovaním neodflagol milník.
+**Odpoveď príde do sekundy.** Telegram volá Cloudflare Worker
+([worker/index.mjs](worker/index.mjs)) priamo, ten overí, odpovie a zvyšok
+nechá na GitHub Actions:
 
-Dve bezpečnostné poistky v kóde:
+```
+Telegram -> Cloudflare Worker -> odpoveď (< 1 s)
+                  |
+                  +-> repository_dispatch -> Actions zapíše state.json
+```
 
-- Príkazy sa berú **len z chatu v `TELEGRAM_CHAT_ID`**. Bota môže nájsť
-  ktokoľvek, cudzie správy sa zahodia (ale offset sa posunie, inak by sa čítali
-  donekonečna).
-- Prevzaté správy si Melichar značí cez `telegram.lastUpdateId` v `state.json`,
-  takže sa jeden príkaz nespracuje dvakrát. Telegram drží neprevzaté správy
-  **24 hodín** — pri troch behoch denne to vyjde, ale keby boli workflowy dlhšie
-  vypnuté, staršie príkazy sa stratia.
+Vyhodnocovanie alarmov zostáva **3× denne** v [check-weather.mjs](scripts/check-weather.mjs)
+— Worker rieši len príkazy.
 
-Webhook na to netreba a nič nemusí bežať — `getUpdates` je ťahanie, nie
-počúvanie.
+Worker nemá vlastné úložisko: aktuálny stav si prečíta z repa cez GitHub API
+(nie cez `raw.githubusercontent`, ktoré je za CDN cache a vracalo by stav starý
+aj niekoľko minút, takže `/stav` by klamal hneď po `/dnu`). Zmenu nezapisuje sám
+— pošle `repository_dispatch` a zápis spraví
+[handle-command.yml](.github/workflows/handle-command.yml). Odpoveď teda odíde
+hneď, commit dobehne do minúty.
+
+Rozhodovacia logika (prahy, synonymá príkazov, skladanie nocí) je v
+[scripts/lib/avocado.mjs](scripts/lib/avocado.mjs), ktorý používa Worker aj Node
+beh. Je to zámerné: keby mal každý svoju kópiu, nové synonymum alebo zmenený
+prah by sa musel dopĺňať dvakrát.
+
+Tri bezpečnostné poistky:
+
+- `setWebhook` sa volá so `secret_token`, Telegram ho posiela v hlavičke
+  `X-Telegram-Bot-Api-Secret-Token`. Bez nej by endpoint mohol volať ktokoľvek,
+  kto uhádne URL — Worker takú požiadavku odmietne s 403.
+- Príkazy sa berú **len z chatu v `TELEGRAM_CHAT_ID`**.
+- Worker vracia Telegramu 200 aj keď spracovanie na pozadí zlyhá. Telegram
+  opakuje doručenie, kým nedostane 200, takže inak by sa jeden príkaz posielal
+  donekonečna.
+
+`/help` odpovie bez jediného sieťového volania — nepotrebuje ani stav, ani
+predpoveď. A `/stav` či opakované `/dnu` nespúšťajú workflow, keď sa stav
+nemení.
+
+### Keď webhook nebeží
+
+Kým webhook nie je nastavený, príkazy vyzdvihuje záložný `getUpdates` priamo v
+`check-weather.mjs` — teda 3× denne, s odozvou v hodinách. Po nasadení webhooku
+začne `getUpdates` vracať HTTP 409; skript to očakáva, zaznamená to a pokračuje
+ďalej. Prepínať sa dá kedykoľvek:
+
+```powershell
+$env:TELEGRAM_BOT_TOKEN="..."
+node scripts/setup/set-telegram-webhook.mjs          # ukáže aktuálny stav
+node scripts/setup/set-telegram-webhook.mjs delete   # späť na polling
+```
+
+### Nasadenie Workera
+
+1. Založ si účet na [Cloudflare](https://dash.cloudflare.com) (free tier stačí)
+   a nainštaluj `npm install -g wrangler`, potom `wrangler login`.
+2. Vo `worker/wrangler.toml` doplň `TELEGRAM_CHAT_ID` (tá istá hodnota ako v
+   GitHub secrets).
+3. Vyrob si GitHub token, ktorý smie spúšťať `repository_dispatch` — jemne
+   zrnený token na repo `Melichar` s právom **Contents: Read and write**.
+4. Vymysli si ľubovoľné dlhé náhodné tajomstvo pre webhook (napr.
+   `openssl rand -hex 32`).
+5. Nastav tajomstvá a nasaď:
+
+   ```bash
+   cd worker
+   wrangler secret put TELEGRAM_BOT_TOKEN
+   wrangler secret put TELEGRAM_WEBHOOK_SECRET
+   wrangler secret put GITHUB_TOKEN
+   wrangler deploy
+   ```
+
+   `wrangler deploy` vypíše URL v tvare `https://melichar.<účet>.workers.dev`.
+6. Nasmeruj naň Telegram:
+
+   ```powershell
+   $env:TELEGRAM_BOT_TOKEN="..."
+   $env:TELEGRAM_WEBHOOK_URL="https://melichar.<účet>.workers.dev"
+   $env:TELEGRAM_WEBHOOK_SECRET="<to isté tajomstvo>"
+   node scripts/setup/set-telegram-webhook.mjs set
+   ```
+7. Napíš botovi `/stav`. Odpoveď má prísť do sekundy. Keď nepríde, pozri
+   `node scripts/setup/set-telegram-webhook.mjs` (vypíše poslednú chybu od
+   Telegramu) a `wrangler tail`.
 
 ## Architektúra
 
-Celá logika beží v jednom kroku na GitHub Actions cron — Telegram Bot API
-nevyžaduje žiadny bežiaci webhook ani pre posielanie správ, ani pre ich príjem
-(`getUpdates` sa pýta sám), takže netreba žiadny druhý komponent (na rozdiel od
-pôvodne zvažovaného Vibera).
+Vyhodnocovanie počasia beží v jednom kroku na GitHub Actions cron — na
+posielanie správ Telegram nič bežiace nevyžaduje. Druhý komponent pribudol až
+kvôli okamžitým odpovediam na príkazy: GitHub Actions cron sa pri záťaži odkladá
+aj o hodiny (viď nižšie), takže „odpovedz hneď" sa cez neho spraviť nedá.
+Cloudflare Worker je preto zámerne úzky — rieši len príkazy, nie alarmy.
 
 ```
+Cloudflare Worker (nonstop, na webhook)
+  -> /dnu /von /stav /help -> odpoveď do sekundy
+  -> repository_dispatch -> Actions zapíšu state.json
+
 GitHub Actions (cron 3x/deň)
-  -> Telegram getUpdates (prišiel /dnu, /von, /stav?)
   -> Open-Meteo hodinová predpoveď (Oznice)
   -> poskladá noci 18:00->09:00 + odhad teploty na liste
   -> porovná s prahmi a sezónnym stavom v state.json
@@ -124,7 +196,7 @@ GitHub Actions (cron 3x/deň)
 
 ### Zápis stavu a spoľahlivosť cronu
 
-Všetky tri workflowy commitujú svoj stav cez spoločný
+Všetky workflowy commitujú svoj stav cez spoločný
 [.github/commit-state.sh](.github/commit-state.sh). Holý `git push` tam
 nestačí: workflowy píšu do toho istého repa a keď sa dva behy prekryjú, druhému
 pushu zlyhá non-fast-forward — job spadne **až po odoslaní správy**, takže sa
@@ -142,6 +214,11 @@ pozorované odklady **2,5–4,5 hodiny**, takže minúty sú zámerne rozhodené
 | počasie | `:07` | 6, 11, 15 |
 | kalendár | `:23` | 5, 6, 7 (ráno) + 11, 15 |
 | emaily | `:41` | (rozvrh vypnutý) |
+
+`handle-command.yml` cron nemá — spúšťa ho Worker udalosťou
+`repository_dispatch`, takže odklady sa ho netýkajú. S `check-weather.yml` zdieľa
+`concurrency: melichar-state`, aby si dva zápisy do `state.json` neprepísali
+navzájom.
 
 Ranné sloty kalendára sú tri, aby mala denná agenda viac pokusov trafiť sa čo
 najbližšie k 07:00 — pošle ju ten beh, ktorý sa reálne vykoná ako prvý po
