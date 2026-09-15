@@ -45,7 +45,10 @@ vyletnený z bytu, teda mladý a neotužený:
 | `BRING_IN_C` = 5 °C | „Prines avokádo dnu" + stav sa prepne na *dnu* | pásmo *chilling injury* (4–10 °C) — pri dlhšej expozícii sa poškodzujú listy |
 | `URGENT_C` = 2 °C | „Ak je ešte vonku, musí dnu" | pri radiačnom ochladení už reálne hrozí mráz na liste |
 | `FREEZE_C` = 0 °C | „Mrzne, neprežije to bez poškodenia" | spálené listy, odumieranie výhonov |
-| `PUT_OUT_C` = 8 °C | po `SPRING_RUN_NIGHTS` (7) nociach nad týmto prahom: „môžeš dať von" | — |
+| `PUT_OUT_C` = 8 °C | po `PUT_OUT_RUN_NIGHTS` (7) nociach nad týmto prahom: „môžeš dať von" | — |
+
+Medzi „prines dnu" (5 °C) a „môžeš dať von" (8 °C) je zámerne 3 °C hysterézia,
+aby sa avokádo nehojdalo tam a späť okolo jednej hranice.
 
 Pod ~10 °C avokádo len zastaví rast a ide do dormancie — to mu **neškodí**, preto
 pôvodný prah 10 °C nebol o poškodení. V Oznici navyše padne pod 10 °C **249 nocí
@@ -57,16 +60,34 @@ Melichar si v `state.json` drží, či je avokádo podľa neho `outside` alebo
 `inside`, a každý prah ohlási **najviac raz za sezónu** (`alertedBelow`):
 
 ```
-jeseň   prvá noc s odhadom na liste <= 5 °C
-        -> "prines dnu", stav = inside, potom ticho
-eskalácia  keď neskôr padne pod 2 °C a pod 0 °C, príde ešte jedno varovanie
-           pre prípad, že si prvú správu prehliadol
-jar     apríl-jún + 7 nocí po sebe nad 8 °C
-        -> "môžeš dať von", stav = outside, milníky sa vynulujú
+ochladenie  prvá noc s odhadom na liste <= 5 °C
+            -> "prines dnu", stav = inside, potom ticho
+eskalácia   keď neskôr padne pod 2 °C a pod 0 °C, príde ešte jedno varovanie
+            pre prípad, že si prvú správu prehliadol
+oteplenie   7 nocí po sebe nad 8 °C (a aspoň 3 dni vnútri)
+            -> "môžeš dať von", stav = outside, milníky sa vynulujú
 ```
 
-Vyjde z toho **cca 2–4 správy za rok** namiesto 249. Obmedzenie na apríl–jún je
-poistka, aby avokádo nevyhnal von februárové oteplenie.
+Vyjde z toho **cca 6 správ za rok** namiesto 249.
+
+### Prečo „môžeš dať von" nie je viazané na jar
+
+Pôvodne sa táto správa posielala len v apríli až júni — ako poistka proti
+februárovému oteplenu. Backtest na štyroch rokoch skutočných dát ale ukázal, že
+to robí horšiu chybu, než akej bráni: **25. 7. 2023** stačila jedna chladná jasná
+noc (7,6 °C, na liste 4,6) na „prines dnu" — a keďže „von" smelo len na jar,
+avokádo by podľa Melichara zostalo vnútri až do **27. 4. 2024**. Deväť mesiacov
+kvôli jednej júlovej noci.
+
+Bez mesačnej hranice príde 11. 8. 2023 „môžeš dať von" a zvyšok leta je vonku.
+Cena je +0,8 správy za rok (5,0 → 5,8). Februárové oteplenie riziko nie je:
+požiadavka na **7 nocí po sebe nad 8 °C na liste** v Oznici v zime nepadne ani
+raz za štyri roky.
+
+`PUT_OUT_COOLDOWN_DAYS` (3) bráni tomu, aby sa čerstvo schované avokádo hneď
+ponúkalo späť von. Väčšiu hodnotu netreba — meranie ukázalo, že proti hojdaniu
+stačí už samotná požiadavka na 7 nocí po sebe (cooldown 0 vs 10 dní dáva 6,3 vs
+5,8 správy ročne).
 
 Rozhoduje sa z okna **najbližších dvoch nocí** — dosť na to, aby správa prišla
 včas, a málo na to, aby sa hlásilo ochladenie, ktoré je 5 dní ďaleko a ešte sa
@@ -79,7 +100,7 @@ behu vyzdvihne, čo mu medzitým prišlo (`getUpdates`), a odpovie:
 
 | správa | čo spraví |
 |---|---|
-| `/dnu` | avokádo je vnútri → cez zimu mlčí, čaká na jar (označí všetky jesenné prahy za vybavené) |
+| `/dnu` | avokádo je vnútri → mlčí, kým sa neoteplí (označí všetky prahy chladu za vybavené) |
 | `/von` | avokádo je vonku → vynuluje prahy a zase varuje pred chladom |
 | `/stav` | povie, kde avokádo vedie a odkedy, plus prehľad nadchádzajúcich nocí |
 | `/help` | zoznam príkazov |
@@ -288,7 +309,9 @@ zásahu do kódu:
 | `URGENT_C` | 2 | naliehavé varovanie |
 | `FREEZE_C` | 0 | mráz |
 | `PUT_OUT_C` | 8 | jarné „môžeš dať von" |
-| `SPRING_RUN_NIGHTS` | 7 | koľko teplých nocí po sebe treba na jar |
+| `PUT_OUT_RUN_NIGHTS` | 7 | koľko teplých nocí po sebe treba na návrat von |
+| `PUT_OUT_COOLDOWN_DAYS` | 3 | koľko dní musí avokádo zostať vnútri, než sa ponúkne von |
+| `PUT_OUT_MIN_MONTH` / `PUT_OUT_MAX_MONTH` | 1 / 12 | mesiace, v ktorých sa „môžeš dať von" vôbec zvažuje |
 | `CLEAR_CLOUD_PCT` | 30 | hranica „jasno" (priemer za noc, %) |
 | `CALM_WIND_KMH` | 10 | hranica „bezvetrie" (priemer za noc, km/h) |
 | `RADIATIVE_PENALTY_C` | 3 | o koľko je list chladnejší za jasnej bezvetrej noci |

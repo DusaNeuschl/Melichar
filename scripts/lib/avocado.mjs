@@ -15,8 +15,15 @@ const num = (name, fallback) => Number(env[name] ?? fallback);
 export const BRING_IN_C = num('BRING_IN_C', 5); // jesenne "prines dnu"
 export const URGENT_C = num('URGENT_C', 2); // "ak je este vonku, hori"
 export const FREEZE_C = num('FREEZE_C', 0); // mraz
-export const PUT_OUT_C = num('PUT_OUT_C', 8); // jarne "mozes dat von"
-export const SPRING_RUN_NIGHTS = num('SPRING_RUN_NIGHTS', 7);
+export const PUT_OUT_C = num('PUT_OUT_C', 8); // "mozes dat von"
+export const PUT_OUT_RUN_NIGHTS = num('PUT_OUT_RUN_NIGHTS', 7); // kolko teplych noci po sebe
+// Mesiace, v ktorych sa "mozes dat von" vobec zvazuje (vratane).
+const PUT_OUT_MIN_MONTH = num('PUT_OUT_MIN_MONTH', 1);
+const PUT_OUT_MAX_MONTH = num('PUT_OUT_MAX_MONTH', 12);
+// Kolko dni musi avokado zostat dnu, nez sa ponuka navrat von. Backtest na 4
+// rokoch ukazal, ze proti hojdaniu staci uz poziadavka na 7 noci po sebe
+// (cooldown 0 vs 10 dni = 6,3 vs 5,8 spravy rocne), takze staci mala poistka.
+const PUT_OUT_COOLDOWN_DAYS = num('PUT_OUT_COOLDOWN_DAYS', 3);
 
 // Milniky sa hlasia raz za sezonu, zoradene od najteplejsieho.
 export const MILESTONES = [BRING_IN_C, URGENT_C, FREEZE_C];
@@ -36,6 +43,10 @@ export function addDays(isoDate, n) {
   const d = new Date(`${isoDate}T00:00:00Z`);
   d.setUTCDate(d.getUTCDate() + n);
   return d.toISOString().slice(0, 10);
+}
+
+export function daysBetween(fromIso, toIso) {
+  return Math.round((Date.parse(`${toIso}T00:00:00Z`) - Date.parse(`${fromIso}T00:00:00Z`)) / 86400000);
 }
 
 // Datum v Prahe, nie v UTC casu runnera.
@@ -183,20 +194,24 @@ export function decide(nights, state, today) {
     }
   }
 
-  // Jar: az ked je cely vyhlad stabilne teply. Mesiac je poistka proti
-  // februarovemu oteplenu, po ktorom este pride mraz.
+  // "Mozes dat von": az ked je cely vyhlad stabilne teply. Nie je to viazane na
+  // jar - aj po jesennom ochladeni sa moze vratit babie leto a avokado moze ist
+  // este na par tyzdnov von. Proti hojdaniu tam a spat je cooldown.
   const month = Number(today.slice(5, 7));
-  const warmRun = upcoming.slice(0, SPRING_RUN_NIGHTS);
+  const warmRun = upcoming.slice(0, PUT_OUT_RUN_NIGHTS);
+  const dnuDost =
+    !avocado.since || daysBetween(avocado.since, today) >= PUT_OUT_COOLDOWN_DAYS;
   if (
     avocado.location === 'inside' &&
-    month >= 4 &&
-    month <= 6 &&
-    warmRun.length >= SPRING_RUN_NIGHTS &&
+    month >= PUT_OUT_MIN_MONTH &&
+    month <= PUT_OUT_MAX_MONTH &&
+    dnuDost &&
+    warmRun.length >= PUT_OUT_RUN_NIGHTS &&
     warmRun.every((n) => n.leafMin > PUT_OUT_C)
   ) {
     const coldest = Math.min(...warmRun.map((n) => n.leafMin));
     messages.push(
-      `🌱 Melichar\n\nNajbližších ${SPRING_RUN_NIGHTS} nocí neklesne pod ${fmtTemp(coldest)} — ` +
+      `🌱 Melichar\n\nNajbližších ${PUT_OUT_RUN_NIGHTS} nocí neklesne pod ${fmtTemp(coldest)} — ` +
         'avokádo môžeš dať von na balkón.'
     );
     avocado.location = 'outside';
@@ -275,8 +290,8 @@ export function applyCommand(cmd, state, nights, today) {
       state: { ...state, avocado },
       changed: true,
       reply:
-        '👍 Avokádo je dnu. Cez zimu budem ticho a ozvem sa na jar, keď vyjde ' +
-        `${SPRING_RUN_NIGHTS} nocí po sebe nad ${PUT_OUT_C} °C.`,
+        '👍 Avokádo je dnu. Budem ticho a ozvem sa, keď príde ' +
+        `${PUT_OUT_RUN_NIGHTS} nocí po sebe nad ${PUT_OUT_C} °C — vtedy ho môžeš dať zase von.`,
     };
   }
 
