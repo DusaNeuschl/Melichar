@@ -240,10 +240,20 @@ alebo externý trigger na `workflow_dispatch`).
 ### 2. Zisti svoje chat ID
 
 1. Vo Telegrame si napíš svojmu novému botovi ľubovoľnú správu (napr. "ahoj").
-2. Otvor v prehliadači (nahraď `<TOKEN>` skutočným tokenom):
-   `https://api.telegram.org/bot<TOKEN>/getUpdates`
-3. V JSON odpovedi nájdi `"message":{"chat":{"id": ...}}` — to číslo je tvoje
-   `TELEGRAM_CHAT_ID`.
+2. Spusti:
+
+   ```powershell
+   $env:TELEGRAM_BOT_TOKEN="..."
+   node scripts/setup/show-telegram-chat-id.mjs
+   ```
+
+   Vypíše `TELEGRAM_CHAT_ID` aj s menom chatu. (Ručne sa to dá aj z
+   `https://api.telegram.org/bot<TOKEN>/getUpdates`, kde je to v
+   `"message":{"chat":{"id": ...}}`.)
+
+Rovnaký skript použi, keď chat ID potrebuješ **znova** — GitHub secrets sa
+spätne prečítať nedajú. Ak už beží webhook, `getUpdates` vracia 409; vtedy ho
+dočasne zruš cez `set-telegram-webhook.mjs delete`, zisti ID a nastav späť.
 
 ### 3. Založ GitHub repo a nastav secrets
 
