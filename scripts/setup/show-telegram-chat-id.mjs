@@ -1,6 +1,12 @@
 // Vypise chat ID, z ktoreho botovi pisu spravy.
 //
-//   $env:TELEGRAM_BOT_TOKEN="..."
+// Token sa da dat ako argument - funguje rovnako v PowerShelli, cmd aj bashi,
+// takze netreba riesit, ako sa v ktorom nastavuje premenna prostredia:
+//
+//   node scripts/setup/show-telegram-chat-id.mjs 123456:ABCdef
+//
+// Alebo cez premennu, ked ju uz mas nastavenu:
+//
 //   node scripts/setup/show-telegram-chat-id.mjs
 //
 // GitHub secrets sa spatne precitat nedaju, takze ked chat ID potrebujes znova
@@ -10,10 +16,19 @@
 // getUpdates odmieta s HTTP 409 - vtedy webhook docasne zrus cez
 // `node scripts/setup/set-telegram-webhook.mjs delete`, zisti ID a nastav spat.
 
-const token = process.env.TELEGRAM_BOT_TOKEN;
+// Uvodzovky okolo tokenu niektore shelly nechaju v hodnote - orezeme ich.
+const token = (process.argv[2] || process.env.TELEGRAM_BOT_TOKEN || '').trim().replace(/^["']|["']$/g, '');
+
 if (!token) {
-  console.error('Chýba TELEGRAM_BOT_TOKEN.');
-  console.error('PowerShell:  $env:TELEGRAM_BOT_TOKEN="123456:ABC..."');
+  console.error('Chýba token.');
+  console.error('Použi:  node scripts/setup/show-telegram-chat-id.mjs <token-od-BotFather>');
+  process.exit(1);
+}
+
+if (!/^\d+:[\w-]+$/.test(token)) {
+  console.error(`Token "${token.slice(0, 12)}..." nevyzerá ako token od BotFather.`);
+  console.error('Má tvar  číslice:písmená_a_číslice  (napr. 123456789:AAHdqTcvCH1vGWJxfSeofSAs0K5PALDsaw)');
+  console.error('Pozor na zabudnuté špicaté zátvorky < > alebo úvodzovky.');
   process.exit(1);
 }
 

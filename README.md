@@ -240,11 +240,10 @@ alebo externý trigger na `workflow_dispatch`).
 ### 2. Zisti svoje chat ID
 
 1. Vo Telegrame si napíš svojmu novému botovi ľubovoľnú správu (napr. "ahoj").
-2. Spusti:
+2. Spusti (token ako argument — funguje rovnako v PowerShelli, cmd aj bashi):
 
-   ```powershell
-   $env:TELEGRAM_BOT_TOKEN="..."
-   node scripts/setup/show-telegram-chat-id.mjs
+   ```
+   node scripts/setup/show-telegram-chat-id.mjs 123456789:AAHdq...
    ```
 
    Vypíše `TELEGRAM_CHAT_ID` aj s menom chatu. (Ručne sa to dá aj z
