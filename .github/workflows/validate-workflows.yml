@@ -1,0 +1,44 @@
+name: Melichar - Validate Workflows
+
+# Neplatny workflow subor sa nikde hlasno neohlasi: GitHub ho proste prestane
+# spustat a naplanovane behy ticho zmiznu. Presne to sa stalo 13. 9. 2026, ked
+# `run: bash ... "chore: update state"` rozbil YAML (dvojbodka s medzerou v
+# nezacitovanom skalari) a dva dni nebezalo ani pocasie, ani ranna agenda.
+#
+# Tento workflow pri kazdom pushu zvaliduje vsetky ostatne. Sam je zamerne
+# trivialny, aby nemal ako spadnut.
+on:
+  push:
+    paths:
+      - '.github/workflows/**'
+  workflow_dispatch: {}
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Parse every workflow file
+        run: |
+          python3 - <<'PY'
+          import glob, sys, yaml
+
+          failed = []
+          for path in sorted(glob.glob('.github/workflows/*.yml')):
+              try:
+                  doc = yaml.safe_load(open(path, encoding='utf-8'))
+              except Exception as err:
+                  failed.append((path, str(err)))
+                  continue
+              if not doc.get('name'):
+                  failed.append((path, 'chýba `name:`'))
+              elif not doc.get('jobs'):
+                  failed.append((path, 'chýba `jobs:`'))
+              else:
+                  print(f'OK  {path}  ({doc["name"]})')
+
+          for path, err in failed:
+              print(f'CHYBA  {path}: {err}', file=sys.stderr)
+          sys.exit(1 if failed else 0)
+          PY

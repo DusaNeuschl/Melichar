@@ -42,4 +42,5 @@ jobs:
         # nedostupny) - vodoznaky uspesnych schranok by sa inak stratili a ich
         # spravy by prisli pri dalsom behu znova.
         if: always()
-        run: bash .github/commit-state.sh email-state.json "chore: update email state"
+        run: |
+          bash .github/commit-state.sh email-state.json "chore: update email state"

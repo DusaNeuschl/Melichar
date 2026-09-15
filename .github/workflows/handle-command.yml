@@ -33,4 +33,5 @@ jobs:
         run: node scripts/apply-command.mjs
 
       - name: Commit updated state
-        run: bash .github/commit-state.sh state.json "chore: avocado ${{ github.event.client_payload.command }} (via Telegram)"
+        run: |
+          bash .github/commit-state.sh state.json "chore: avocado ${{ github.event.client_payload.command }} (via Telegram)"

@@ -39,4 +39,5 @@ jobs:
         run: node scripts/check-calendar.mjs
 
       - name: Commit updated state
-        run: bash .github/commit-state.sh calendar-state.json "chore: update calendar state"
+        run: |
+          bash .github/commit-state.sh calendar-state.json "chore: update calendar state"

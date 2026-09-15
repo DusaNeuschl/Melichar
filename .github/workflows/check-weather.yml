@@ -43,4 +43,5 @@ jobs:
         run: node scripts/check-weather.mjs
 
       - name: Commit updated state
-        run: bash .github/commit-state.sh state.json "chore: update weather state"
+        run: |
+          bash .github/commit-state.sh state.json "chore: update weather state"
