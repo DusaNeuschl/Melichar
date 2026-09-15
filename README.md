@@ -134,11 +134,13 @@ Kým webhook nie je nastavený, príkazy vyzdvihuje záložný `getUpdates` pria
 začne `getUpdates` vracať HTTP 409; skript to očakáva, zaznamená to a pokračuje
 ďalej. Prepínať sa dá kedykoľvek:
 
-```powershell
-$env:TELEGRAM_BOT_TOKEN="..."
+```
 node scripts/setup/set-telegram-webhook.mjs          # ukáže aktuálny stav
 node scripts/setup/set-telegram-webhook.mjs delete   # späť na polling
 ```
+
+Na token sa skript opýta sám, takže nezáleží na tom, či si v PowerShelli,
+cmd alebo bashi — a nedostane sa ani do histórie príkazov.
 
 ### Nasadenie Workera
 
@@ -161,12 +163,12 @@ node scripts/setup/set-telegram-webhook.mjs delete   # späť na polling
    ```
 
    `wrangler deploy` vypíše URL v tvare `https://melichar.<účet>.workers.dev`.
-5. Nasmeruj naň Telegram:
+   Pri prvom nasadení si vyžiada registráciu `workers.dev` subdomény — potvrď,
+   je zadarmo a je celoúčtová aj trvalá, tak si vyber niečo neutrálne.
+5. Nasmeruj naň Telegram. Skript si vypýta token, URL aj tajomstvo sám:
 
-   ```powershell
-   $env:TELEGRAM_BOT_TOKEN="..."
-   $env:TELEGRAM_WEBHOOK_URL="https://melichar.<účet>.workers.dev"
-   $env:TELEGRAM_WEBHOOK_SECRET="<to isté tajomstvo>"
+   ```
+   cd ..
    node scripts/setup/set-telegram-webhook.mjs set
    ```
 6. Napíš botovi `/stav`. Odpoveď má prísť do sekundy. Keď nepríde, pozri
