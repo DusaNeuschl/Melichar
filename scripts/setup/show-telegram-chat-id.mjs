@@ -54,7 +54,12 @@ for (const u of data.result || []) {
 
 if (chats.size === 0) {
   console.log('Telegram nedrží žiadnu správu. Napíš botovi čokoľvek a spusti to znova.');
-  console.log('(Neprevzaté správy sa držia 24 hodín.)');
+  console.log('');
+  console.log('Pozor na pretek s workflowom: check-weather.mjs tiež volá getUpdates a');
+  console.log('prevzaté správy tým zmiznú. Ak ti medzitým bot odpovedal (napr. nápovedou),');
+  console.log('zjedol ti ju práve on — napíš novú a spusti tento skript hneď, bez toho');
+  console.log('aby si medzitým púšťal "Run workflow".');
+  console.log('(Neprevzaté správy sa inak držia 24 hodín.)');
   process.exit(0);
 }
 
