@@ -46,7 +46,7 @@ async function readState(env) {
   return normalizeState(JSON.parse(await res.text()));
 }
 
-async function dispatchCommand(env, cmd, today) {
+async function dispatch(env, eventType, payload = {}) {
   const res = await fetch(`${GITHUB_API}/repos/${env.GITHUB_REPO}/dispatches`, {
     method: 'POST',
     headers: {
@@ -55,12 +55,36 @@ async function dispatchCommand(env, cmd, today) {
       'Content-Type': 'application/json',
       'User-Agent': 'melichar-worker',
     },
-    body: JSON.stringify({
-      event_type: 'melichar-command',
-      client_payload: { command: cmd, today },
-    }),
+    body: JSON.stringify({ event_type: eventType, client_payload: payload }),
   });
   if (!res.ok) throw new Error(`repository_dispatch failed: ${res.status} ${await res.text()}`);
+}
+
+function pragueHour(ms) {
+  return Number(
+    new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/Prague', hour: '2-digit', hourCycle: 'h23' }).format(
+      new Date(ms)
+    )
+  );
+}
+
+// Ranny budik pre kalendar a emaily.
+//
+// GitHub Actions cron sa na tomto repe oneskoroval aj o 5 hodin (agenda chodila
+// o 12:04), Cloudflare cron ide na sekundy. Worker preto o 7:00 len "zaklope" na
+// GitHub cez repository_dispatch a workflowy nastartuju hned.
+//
+// Cloudflare cron bezi v UTC, ktore neposuva letny cas: spusta sa o 05:00 aj
+// 06:00 UTC a dalej pusti len ten beh, pri ktorom je v Prahe prave 7 hodin.
+export async function morning(scheduledTime, env) {
+  const hour = pragueHour(scheduledTime);
+  if (hour !== 7) {
+    console.log(`Ranny cron: v Prahe je ${hour}:00, nie 7:00 - preskakujem.`);
+    return false;
+  }
+  await dispatch(env, 'melichar-morning', { scheduledTime });
+  console.log('Ranny cron: kalendar a emaily spustene.');
+  return true;
 }
 
 async function fetchNights(env) {
@@ -71,6 +95,10 @@ async function fetchNights(env) {
 }
 
 export default {
+  async scheduled(controller, env, ctx) {
+    ctx.waitUntil(morning(controller.scheduledTime, env));
+  },
+
   async fetch(request, env, ctx) {
     if (request.method !== 'POST') return new Response('Melichar webhook', { status: 200 });
 
@@ -128,5 +156,5 @@ async function handle(update, env) {
 
   // Stav sa meni len ked sa naozaj zmenil - "/stav" ani opakovane "/dnu"
   // nemaju preco spustat workflow.
-  if (applied.changed) await dispatchCommand(env, cmd, today);
+  if (applied.changed) await dispatch(env, 'melichar-command', { command: cmd, today });
 }

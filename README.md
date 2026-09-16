@@ -217,6 +217,13 @@ GitHub Actions (cron 3x/deň)
   -> commitne aktualizovaný state.json
 ```
 
+### Dlhé správy
+
+Telegram odmietne správu dlhšiu ako 4096 znakov a skript by spadol až po tom, čo
+časť práce spravil. [scripts/lib/telegram.mjs](scripts/lib/telegram.mjs) preto
+dlhé správy delí po riadkoch na viac kusov (`(1/3)`, `(2/3)`…). Používajú ho
+všetky tri Node skripty.
+
 ### Zápis stavu a spoľahlivosť cronu
 
 Všetky workflowy commitujú svoj stav cez spoločný
@@ -235,8 +242,8 @@ pozorované odklady **2,5–4,5 hodiny**, takže minúty sú zámerne rozhodené
 | workflow | minúta | hodiny (UTC) |
 |---|---|---|
 | počasie | `:07` | 6, 11, 15 |
-| kalendár | `:23` | 5, 6, 7 (ráno) + 11, 15 |
-| emaily | `:41` | (rozvrh vypnutý) |
+| kalendár | `:23` | 5, 6, 7, 11, 15 — záloha; agendu spúšťa Worker o 07:00 |
+| emaily | — | len ranný signál z Workera o 07:00 |
 
 `handle-command.yml` cron nemá — spúšťa ho Worker udalosťou
 `repository_dispatch`, takže odklady sa ho netýkajú. S `check-weather.yml` zdieľa
@@ -337,13 +344,13 @@ Zmazaním sa Melichar pokúsi znova načítať všetko, čo Telegram ešte drž�
 
 # Emailový súhrn
 
-> **Pozastavené:** automatický cron rozvrh je v
-> [check-emails.yml](.github/workflows/check-emails.yml) vypnutý. Kód aj
-> nastavenie zostávajú funkčné, dá sa spustiť manuálne cez
-> **Actions → Melichar - Email Digest → Run workflow**, alebo znova zapnúť
-> odkomentovaním `schedule` bloku vo workflow súbore.
+> **Raz denne o 07:00** spolu s agendou kalendára — spúšťa ho ten istý ranný
+> signál z Cloudflare Workera. Pôvodný rozvrh 3× denne je v
+> [check-emails.yml](.github/workflows/check-emails.yml) stále zakomentovaný.
+> Súhrn príde aj v deň bez nových e-mailov („žiadne nové emaily"), aby sa ticho
+> nedalo zameniť s nespusteným behom.
 
-Druhá funkcia Melichara: 3x denne (rovnaký rozvrh ako počasie) skontroluje 4
+Druhá funkcia Melichara: každé ráno skontroluje 4
 schránky, cez Claude (Anthropic API) roztriedi nové emaily na **obchodné
 ponuky** (dostanú krátke AI zhrnutie) a **ostatné** (len sa spočítajú), a
 pošle súhrn na Telegram. Pri prvom behu pre každú schránku sa len založí
@@ -574,21 +581,36 @@ zdieľané/prihlásené kalendáre).
 
 ### Ako je zaručené 07:00 celoročne
 
-GitHub Actions cron beží v UTC, ktoré neposúva letný čas — jeden pevný výraz
-by preto polroka trafil 07:00 a polroka 08:00. Riešenie:
+GitHub Actions cron na tomto repe **meškal aj o 5 hodín** (16. 9. 2026 prišla
+agenda o 12:04), takže ako budík nefunguje. Presný čas preto drží **Cloudflare
+Worker**: jeho cron ide na sekundy a o 07:00 len „zaklope" na GitHub udalosťou
+`repository_dispatch: melichar-morning`. Na tú štartujú okamžite oba ranné
+workflowy — kalendár aj e-maily.
 
-- workflow má **dva ranné crony** — `0 5 * * *` (= 07:00 v lete) a
-  `0 6 * * *` (= 07:00 v zime),
-- ktorý z nich agendu naozaj pošle, rozhoduje **skript podľa času v Prahe**:
-  pošle ju pri prvom behu **od 07:00 miestneho času** a najviac **raz za deň**
-  (dátum posledného odoslania drží `lastAgendaDate` v `calendar-state.json`).
+```
+Cloudflare cron 05:00 a 06:00 UTC
+  -> Worker: je v Prahe práve 7:00? (leto 05:00 UTC, zima 06:00 UTC)
+  -> áno: repository_dispatch melichar-morning
+       -> check-calendar.yml  (agenda)
+       -> check-emails.yml    (súhrn e-mailov)
+```
 
-Vďaka tomu agenda nevypadne, ani keď sa cron oneskorí (bežná vec na GitHub
-Actions) alebo mu beh úplne preskočí — pošle ju nasledujúci beh v ten istý deň.
-Hodinu sa dá zmeniť premennou `AGENDA_HOUR` (predvolene `7`).
+Cloudflare cron beží v UTC, ktoré neposúva letný čas, preto sú časy dva a Worker
+pustí ďalej len ten, pri ktorom je v Prahe 7 hodín. Overené na každom dni roka
+2026 vrátane dní prechodu času: práve jeden štart denne.
 
-Manuálny beh (**Run workflow**) agendu pošle vždy a `lastAgendaDate`
-nemení — testovanie ti tak nezoberie skutočnú rannú správu.
+GitHub crony kalendára (`:23` o 5, 6, 7, 11 a 15 UTC) zostávajú ako **záloha a
+kontrola zmien** cez deň. Keby ranný signál nedorazil, agendu pošle prvý z nich
+po 07:00. Dvakrát za deň nepríde — skript si drží `lastAgendaDate` a workflow
+má `concurrency`, aby sa ranný signál a záloha nepredbehli pri čítaní stavu.
+
+Zápis stavu beží **aj keď skript spadne** (`if: always()`). Agenda sa totiž
+odosiela ako prvá a `lastAgendaDate` sa ukladá hneď po nej; keby sa pri páde
+neskoršej detekcie zmien neuložil, každý ďalší beh v ten deň by agendu poslal
+znova.
+
+Manuálny beh (**Run workflow**) agendu pošle vždy a `lastAgendaDate` nemení —
+testovanie ti tak nezoberie skutočnú rannú správu.
 
 Používa **rovnaký** Google Cloud OAuth klient (`GOOGLE_CLIENT_ID` /
 `GOOGLE_CLIENT_SECRET`) ako Gmail vyššie, len s novým refresh tokenom pre

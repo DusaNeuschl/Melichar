@@ -2,6 +2,11 @@ name = "melichar"
 main = "index.mjs"
 compatibility_date = "2026-09-01"
 
+# Ranny budik pre kalendar a emaily. UTC, takze dva casy - worker pusti dalej
+# len ten, pri ktorom je v Prahe 7:00 (05:00 UTC v lete, 06:00 UTC v zime).
+[triggers]
+crons = ["0 5 * * *", "0 6 * * *"]
+
 # Repo je verejne, takze tu su len udaje, ktore su aj tak verejne.
 # TELEGRAM_CHAT_ID medzi ne nepatri - nastavuje sa ako secret nizsie.
 [vars]

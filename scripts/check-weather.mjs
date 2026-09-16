@@ -12,6 +12,7 @@ import {
   pragueToday,
   HELP_TEXT,
 } from './lib/avocado.mjs';
+import { sendTelegramMessage } from './lib/telegram.mjs';
 
 const STATE_PATH = fileURLToPath(new URL('../state.json', import.meta.url));
 const lat = process.env.LATITUDE;
@@ -36,23 +37,6 @@ async function fetchForecast() {
   const res = await fetch(forecastUrl(lat, lon));
   if (!res.ok) throw new Error(`Open-Meteo error: ${res.status} ${await res.text()}`);
   return (await res.json()).hourly;
-}
-
-async function sendTelegramMessage(text) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text }),
-  });
-  const raw = await res.text();
-  let data;
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    throw new Error(`Telegram send failed: HTTP ${res.status} - ${raw.slice(0, 300)}`);
-  }
-  if (!data.ok) throw new Error(`Telegram send failed: ${JSON.stringify(data)}`);
 }
 
 // --- Prikazy: zalozna cesta bez webhooku -----------------------------------

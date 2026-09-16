@@ -2,6 +2,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { getAccessToken } from './lib/google-auth.mjs';
 import { listCalendars, fetchDayAgenda, syncCalendar } from './lib/calendar.mjs';
+import { sendTelegramMessage } from './lib/telegram.mjs';
 
 const STATE_PATH = fileURLToPath(new URL('../calendar-state.json', import.meta.url));
 const runType = process.env.RUN_TYPE || 'manual';
@@ -59,23 +60,6 @@ async function loadState() {
 
 async function saveState(state) {
   await writeFile(STATE_PATH, JSON.stringify(state, null, 2) + '\n');
-}
-
-async function sendTelegramMessage(text) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text }),
-  });
-  const raw = await res.text();
-  let data;
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    throw new Error(`Telegram send failed: HTTP ${res.status} - ${raw.slice(0, 300)}`);
-  }
-  if (!data.ok) throw new Error(`Telegram send failed: ${JSON.stringify(data)}`);
 }
 
 function fmtTime(start) {

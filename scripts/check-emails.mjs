@@ -4,6 +4,7 @@ import { fetchNewGmailMessages } from './lib/gmail.mjs';
 import { fetchNewOutlookMessages } from './lib/outlook.mjs';
 import { fetchNewImapMessages } from './lib/imap.mjs';
 import { classifyEmails } from './lib/claude.mjs';
+import { sendTelegramMessage } from './lib/telegram.mjs';
 
 const STATE_PATH = fileURLToPath(new URL('../email-state.json', import.meta.url));
 
@@ -20,23 +21,6 @@ async function loadState() {
 
 async function saveState(state) {
   await writeFile(STATE_PATH, JSON.stringify(state, null, 2) + '\n');
-}
-
-async function sendTelegramMessage(text) {
-  const token = process.env.TELEGRAM_BOT_TOKEN;
-  const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ chat_id: process.env.TELEGRAM_CHAT_ID, text }),
-  });
-  const raw = await res.text();
-  let data;
-  try {
-    data = JSON.parse(raw);
-  } catch {
-    throw new Error(`Telegram send failed: HTTP ${res.status} - ${raw.slice(0, 300)}`);
-  }
-  if (!data.ok) throw new Error(`Telegram send failed: ${JSON.stringify(data)}`);
 }
 
 async function main() {
@@ -157,11 +141,10 @@ async function main() {
     failures.forEach((f) => lines.push(`- ${f.key}: ${f.message.slice(0, 200)}`));
   }
 
-  if (lines.length > 1) {
-    await sendTelegramMessage(lines.join('\n'));
-  } else {
-    console.log('No new emails since last check.');
-  }
+  // Suhrn chodi raz denne o 7:00, takze aj prazdny den dostane spravu - inak by
+  // sa ticho nedalo odlisit od toho, ze beh vobec neprebehol.
+  if (lines.length === 1) lines.push('', 'Od posledného súhrnu žiadne nové emaily.');
+  await sendTelegramMessage(lines.join('\n'));
 
   console.log(`Sources failed: ${failures.length}, new emails: ${allNewEmails.length}.`);
   if (failures.length) process.exitCode = 1;
