@@ -71,6 +71,45 @@ function fmtTime(start) {
   });
 }
 
+function fmtDate(start) {
+  if (!start) return '';
+  const d = start.includes('T') ? new Date(start) : new Date(`${start}T12:00:00Z`);
+  return d.toLocaleDateString('sk-SK', { timeZone: 'Europe/Prague' });
+}
+
+const LABELS = { cancelled: '✗ Zrušená', added: '+ Nová', moved: '~ Presunutá', renamed: '~ Premenovaná' };
+
+// Opakovana udalost je v Google Kalendari rozvinuta na samostatne vyskyty (tyzdenna
+// az do roku 2040 = stovky kusov). Kazdy vyskyt by bol samostatny riadok - zmazanie
+// jednej serie "Hasiči" 16. 9. 2026 poslalo 728 riadkov v 8 spravach. Zmeny sa
+// preto zlucuju podla druhu, nazvu a kalendara do jedneho riadku.
+export function formatChanges(changes) {
+  const groups = new Map();
+  for (const c of changes) {
+    const title = c.type === 'renamed' ? `"${c.oldSummary}" → "${c.summary}"` : `"${c.summary}"`;
+    const key = `${c.type}|${title}|${c.calendar}`;
+    if (!groups.has(key)) groups.set(key, { ...c, title, starts: [] });
+    groups.get(key).starts.push(c.start);
+  }
+  return [...groups.values()].map((g) => {
+    const starts = g.starts.filter(Boolean).sort();
+    const first = starts[0];
+    const last = starts[starts.length - 1];
+    const when = g.type === 'moved' ? 'na ' : '';
+    if (g.starts.length === 1) {
+      const at = g.type === 'renamed' ? '' : ` ${when}${fmtDate(first)} ${fmtTime(toStart(first))}`;
+      return `${LABELS[g.type]}: ${g.title}${at} (${g.calendar})`;
+    }
+    const range = first === last ? fmtDate(first) : `${fmtDate(first)} – ${fmtDate(last)}`;
+    return `${LABELS[g.type]}: ${g.title} (${g.calendar}) — ${g.starts.length} termínov, ${range}`;
+  });
+}
+
+function toStart(key) {
+  if (!key) return null;
+  return key.includes('T') ? { dateTime: key } : { date: key };
+}
+
 function startKey(ev) {
   return ev.start?.dateTime || ev.start?.date || '';
 }
@@ -109,7 +148,7 @@ async function runMorningAgenda(accessToken, calendars, now = new Date()) {
 }
 
 async function runChangeDetection(accessToken, calendars, state) {
-  const changeLines = [];
+  const changes = [];
   const nowMs = Date.now();
 
   for (const cal of calendars) {
@@ -139,7 +178,7 @@ async function runChangeDetection(accessToken, calendars, state) {
       if (ev.status === 'cancelled') {
         const cached = cache[ev.id];
         if (!isBaseline && cached) {
-          changeLines.push(`✗ Zrušená: "${cached.summary}" (${cached.calendar})`);
+          changes.push({ type: 'cancelled', summary: cached.summary, calendar: cached.calendar, start: cached.start });
         }
         delete newCache[ev.id];
         continue;
@@ -151,11 +190,11 @@ async function runChangeDetection(accessToken, calendars, state) {
 
       if (!isBaseline) {
         if (!cached) {
-          changeLines.push(`+ Nová: "${summary}" ${fmtTime(ev.start)} (${cal.summary})`);
+          changes.push({ type: 'added', summary, calendar: cal.summary, start });
         } else if (cached.start !== start) {
-          changeLines.push(`~ Presunutá: "${summary}" na ${fmtTime(ev.start)} (${cal.summary})`);
+          changes.push({ type: 'moved', summary, calendar: cal.summary, start });
         } else if (cached.summary !== summary) {
-          changeLines.push(`~ Premenovaná: "${cached.summary}" → "${summary}" (${cal.summary})`);
+          changes.push({ type: 'renamed', summary, oldSummary: cached.summary, calendar: cal.summary, start });
         }
       }
 
@@ -173,7 +212,7 @@ async function runChangeDetection(accessToken, calendars, state) {
     };
   }
 
-  return changeLines;
+  return formatChanges(changes);
 }
 
 async function main() {
