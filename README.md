@@ -599,6 +599,19 @@ Cloudflare cron beží v UTC, ktoré neposúva letný čas, preto sú časy dva 
 pustí ďalej len ten, pri ktorom je v Prahe 7 hodín. Overené na každom dni roka
 2026 vrátane dní prechodu času: práve jeden štart denne.
 
+**Kontrola, či budík môže fungovať.** Worker spúšťa workflowy GitHub tokenom a
+jemne zrnené tokeny expirujú. Keby prestal platiť, agenda aj e-maily by ticho
+neprišli. Stav sa dá overiť kedykoľvek bez vedľajších účinkov (pošle udalosť
+`melichar-ping`, na ktorú nereaguje žiadny workflow):
+
+```powershell
+Invoke-WebRequest https://melichar.dneuschl.workers.dev/health `
+  -Headers @{ 'X-Telegram-Bot-Api-Secret-Token' = '<tajomstvo webhooku>' }
+```
+
+`{"github_dispatch":"ok"}` = v poriadku. Pri chybe vráti 502 aj s dôvodom od
+GitHubu — typicky expirovaný token, vtedy `wrangler secret put GITHUB_TOKEN`.
+
 GitHub crony kalendára (`:23` o 5, 6, 7, 11 a 15 UTC) zostávajú ako **záloha a
 kontrola zmien** cez deň. Keby ranný signál nedorazil, agendu pošle prvý z nich
 po 07:00. Dvakrát za deň nepríde — skript si drží `lastAgendaDate` a workflow

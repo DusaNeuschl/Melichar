@@ -100,6 +100,22 @@ export default {
   },
 
   async fetch(request, env, ctx) {
+    // Kontrola, ci GitHub token vo Workeri este smie spustat workflowy. Posle
+    // udalost melichar-ping, na ktoru nereaguje ziadny workflow - takze bez
+    // vedlajsich ucinkov. Fine-grained tokeny expiruju; keby prestal fungovat,
+    // ranna agenda aj e-maily by ticho neprisli.
+    if (new URL(request.url).pathname === '/health') {
+      if (request.headers.get('X-Telegram-Bot-Api-Secret-Token') !== env.TELEGRAM_WEBHOOK_SECRET) {
+        return new Response('forbidden', { status: 403 });
+      }
+      try {
+        await dispatch(env, 'melichar-ping');
+        return Response.json({ github_dispatch: 'ok' });
+      } catch (err) {
+        return Response.json({ github_dispatch: 'error', detail: err.message.slice(0, 300) }, { status: 502 });
+      }
+    }
+
     if (request.method !== 'POST') return new Response('Melichar webhook', { status: 200 });
 
     // Telegram posiela tajomstvo nastavene pri setWebhook. Bez tejto kontroly by
