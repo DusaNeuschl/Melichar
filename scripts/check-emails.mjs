@@ -109,7 +109,14 @@ async function main() {
   if (allNewEmails.length > 0) {
     const offers = [];
     let otherCount = 0;
-    try {
+    // Bez kluca nie je triedenie vypadok, ale nenakonfigurovana volba - rovnako
+    // ako schranka bez secrets. Inak by bol kazdy ranny beh cerveny a skutocne
+    // zlyhanie by sa v tom stratilo.
+    if (!process.env.ANTHROPIC_API_KEY) {
+      console.log('[klasifikácia] preskočené, nenakonfigurované (chýba ANTHROPIC_API_KEY)');
+      lines.push('', `Nové emaily (${allNewEmails.length}), neroztriedené (chýba ANTHROPIC_API_KEY):`);
+      allNewEmails.forEach((e, i) => lines.push(`${i + 1}. [${e.from}] ${e.subject}`));
+    } else try {
       for (const c of await classifyEmails(allNewEmails)) {
         const email = allNewEmails[c.index];
         if (!email) continue;
