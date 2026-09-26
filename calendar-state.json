@@ -8498,11 +8498,6 @@
           "start": "2040-08-21T09:00:00+02:00",
           "calendar": "Společný kalendář"
         },
-        "6pj34dj26or3gb9o6hhm8b9k65j36b9o6hi64b9m61h38pj2c4s3ed9g6g": {
-          "summary": "Praha Kika",
-          "start": "2026-09-19",
-          "calendar": "Společný kalendář"
-        },
         "65h3cc1lcko3ebb3cgq66b9k6ti3cb9o6pj68bb168qj2c9p6oo3ee9nc4": {
           "summary": "Kika Praha",
           "start": "2026-10-09",
@@ -34625,5 +34620,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-09-25"
+  "lastAgendaDate": "2026-09-26"
 }
