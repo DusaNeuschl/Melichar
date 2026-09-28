@@ -1021,7 +1021,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CK-TraPbkJcDEK-TraPbkJcDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CN_Nn_fikZcDEN_Nn_fikZcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -19433,11 +19433,6 @@
           "start": "2040-08-27T13:45:00+02:00",
           "calendar": "Společný kalendář"
         },
-        "6co30d1l6kqj4bb475i36b9k6gpm8bb174s38bb270o3gc1lcphj0cho64_20260921T140000Z": {
-          "summary": "Fili housle",
-          "start": "2026-09-21T16:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
         "6co30d1l6kqj4bb475i36b9k6gpm8bb174s38bb270o3gc1lcphj0cho64_20261005T140000Z": {
           "summary": "Fili housle",
           "start": "2026-10-05T16:00:00+02:00",
@@ -23066,11 +23061,6 @@
         "6co30d1l6kqj4bb475i36b9k6gpm8bb174s38bb270o3gc1lcphj0cho64_20400827T140000Z": {
           "summary": "Fili housle",
           "start": "2040-08-27T16:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
-        "cgq32p9m64ojab9kcgs68b9k64pj2bb1c8qm8bb16lij6cb270s6cc31c4_20260921T143000Z": {
-          "summary": "František hudebka",
-          "start": "2026-09-21T16:30:00+02:00",
           "calendar": "Společný kalendář"
         },
         "cgq32p9m64ojab9kcgs68b9k64pj2bb1c8qm8bb16lij6cb270s6cc31c4_20261005T143000Z": {
@@ -33996,6 +33986,11 @@
         "6cpjgc9hcopjgb9ocdi3cb9k71hjeb9p60o3ibb175i34cpg6oom6dj170": {
           "summary": "Fili aerobik vystoupení",
           "start": "2026-10-10T17:00:00+02:00",
+          "calendar": "Společný kalendář"
+        },
+        "coqj6dj1c8o34b9h6gsj4b9k6dj3gb9o60rj2bb66oom8e3170o3gphj6c": {
+          "summary": "Sklípek kobily",
+          "start": "2026-11-19T19:30:00+01:00",
           "calendar": "Společný kalendář"
         }
       }
