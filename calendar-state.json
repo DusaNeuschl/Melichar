@@ -1021,7 +1021,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CI-hjsP-6JYDEI-hjsP-6JYDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CK-TraPbkJcDEK-TraPbkJcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -8508,11 +8508,6 @@
           "start": "2026-11-06T09:30:00+01:00",
           "calendar": "Společný kalendář"
         },
-        "clh62pj5ccqj4bb374r30b9kc4rm8b9p6grjib9p60pmcd31ccp36opgck_20260921T070000Z": {
-          "summary": "Franta Bystřinka",
-          "start": "2026-09-21T09:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
         "clh62pj5ccqj4bb374r30b9kc4rm8b9p6grjib9p60pmcd31ccp36opgck_20261005T070000Z": {
           "summary": "Franta Bystřinka",
           "start": "2026-10-05T09:00:00+02:00",
@@ -15806,11 +15801,6 @@
         "60p6cc1l6kp32bb46dhj6b9k64rjabb164qm2bb66or6cc1l74p32d346s": {
           "summary": "Státní svátek",
           "start": "2026-09-28",
-          "calendar": "Společný kalendář"
-        },
-        "ckoj2cph6hh64bb471ijgb9k64o3gb9p70pm4b9o61gm4ob6c9hm4c346k_20260921T114500Z": {
-          "summary": "Fili sbor a nauka",
-          "start": "2026-09-21T13:45:00+02:00",
           "calendar": "Společný kalendář"
         },
         "ckoj2cph6hh64bb471ijgb9k64o3gb9p70pm4b9o61gm4ob6c9hm4c346k_20261005T114500Z": {
@@ -34001,6 +33991,11 @@
         "74om4db3c9hm8b9icgqm8b9k6li32b9p70ojeb9g6kpj6opmcosjgpb56g": {
           "summary": "Tátové + drobotina s vojtom",
           "start": "2026-11-13",
+          "calendar": "Společný kalendář"
+        },
+        "6cpjgc9hcopjgb9ocdi3cb9k71hjeb9p60o3ibb175i34cpg6oom6dj170": {
+          "summary": "Fili aerobik vystoupení",
+          "start": "2026-10-10T17:00:00+02:00",
           "calendar": "Společný kalendář"
         }
       }
