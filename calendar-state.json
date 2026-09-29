@@ -511,7 +511,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgkOKp0QMokOKp0QM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgku7N1gMoku7N1gM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
@@ -581,11 +581,6 @@
         "20291226_1hh8eobeub1oegv3s970nbthc4": {
           "summary": "St. Stephen's Day",
           "start": "2029-12-26",
-          "calendar": "České sviatky"
-        },
-        "20260928_knq3jejv0udbrb5q1sqd9g6dg4": {
-          "summary": "St. Wenceslas Day",
-          "start": "2026-09-28",
           "calendar": "České sviatky"
         },
         "20270214_vr4igcmcav9csb5b4m50psulk8": {
@@ -1021,7 +1016,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CN_Nn_fikZcDEN_Nn_fikZcDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CL-kzLyMkpcDEL-kzLyMkpcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -1221,11 +1216,6 @@
         "c5gmcor261h36b9g68sj0b9kcco38b9p6srj4b9n65h36p9icgrj4cr3cg": {
           "summary": "Kika Praha",
           "start": "2027-06-04",
-          "calendar": "Společný kalendář"
-        },
-        "cdij6cpn6dgjab9m65gm2b9k75j64bb174qjab9m60qj6pho6dh30chlcg": {
-          "summary": "Klobúčiky na oznici",
-          "start": "2026-10-03T00:00:00+02:00",
           "calendar": "Společný kalendář"
         },
         "69j3ceb364s6cb9h68sm4b9k65hmcb9p6gq68b9p6dgjee9h60sjie9p6g_20260924T070000Z": {
@@ -34605,5 +34595,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-09-28"
+  "lastAgendaDate": "2026-09-29"
 }
