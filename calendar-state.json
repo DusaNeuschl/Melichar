@@ -511,7 +511,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgku7N1gMoku7N1gM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEg3LGc2AMo3LGc2AM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
@@ -1216,11 +1216,6 @@
         "c5gmcor261h36b9g68sj0b9kcco38b9p6srj4b9n65h36p9icgrj4cr3cg": {
           "summary": "Kika Praha",
           "start": "2027-06-04",
-          "calendar": "Společný kalendář"
-        },
-        "69j3ceb364s6cb9h68sm4b9k65hmcb9p6gq68b9p6dgjee9h60sjie9p6g_20260924T070000Z": {
-          "summary": "Fili Bystřina",
-          "start": "2026-09-24T09:00:00+02:00",
           "calendar": "Společný kalendář"
         },
         "69j3ceb364s6cb9h68sm4b9k65hmcb9p6gq68b9p6dgjee9h60sjie9p6g_20261001T070000Z": {
