@@ -1016,7 +1016,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CL-kzLyMkpcDEL-kzLyMkpcDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CL_19OKPnJcDEL_19OKPnJcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -34570,5 +34570,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-10-02"
+  "lastAgendaDate": "2026-10-03"
 }
