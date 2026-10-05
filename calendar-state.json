@@ -188,11 +188,6 @@
           "start": "2029-12-24",
           "calendar": "České státní svátky"
         },
-        "20260928_0soalqep327rqts14oc2r3lr94": {
-          "summary": "Den české státnosti",
-          "start": "2026-09-28",
-          "calendar": "České státní svátky"
-        },
         "20261224_v453bbnd8j240qdtadgcsbf5i4": {
           "summary": "Štědrý den",
           "start": "2026-12-24",
@@ -15771,11 +15766,6 @@
         "65i30oph6ssj6bb3c9i68b9k74r6cbb16kqjeb9ic8rj2c336hh68cj36c": {
           "summary": "Státní svátek",
           "start": "2026-10-28",
-          "calendar": "Společný kalendář"
-        },
-        "60p6cc1l6kp32bb46dhj6b9k64rjabb164qm2bb66or6cc1l74p32d346s": {
-          "summary": "Státní svátek",
-          "start": "2026-09-28",
           "calendar": "Společný kalendář"
         },
         "ckoj2cph6hh64bb471ijgb9k64o3gb9p70pm4b9o61gm4ob6c9hm4c346k_20261005T114500Z": {
@@ -34570,5 +34560,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-10-04"
+  "lastAgendaDate": "2026-10-05"
 }
