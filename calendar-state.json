@@ -1011,7 +1011,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CL-S9YTKn5cDEL-S9YTKn5cDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CP_mqu3Lo5cDEP_mqu3Lo5cDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -33946,6 +33946,11 @@
         "coqj6dj1c8o34b9h6gsj4b9k6dj3gb9o60rj2bb66oom8e3170o3gphj6c": {
           "summary": "Sklípek kobily",
           "start": "2026-11-19T19:30:00+01:00",
+          "calendar": "Společný kalendář"
+        },
+        "6so62or16os6ab9k6sp6ab9kcos3abb1c4r3cbb26pi3ecpk6csm2p9hco": {
+          "summary": "Halloween oslava",
+          "start": "2026-10-31",
           "calendar": "Společný kalendář"
         }
       }
