@@ -506,7 +506,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEg3LGc2AMo3LGc2AM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgtdHT2QMotdHT2QM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
@@ -34555,5 +34555,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-10-06"
+  "lastAgendaDate": "2026-10-07"
 }
