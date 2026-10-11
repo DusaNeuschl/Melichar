@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgj_2S0gMoj_2S0gM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgtdHT2QMotdHT2QM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -34535,5 +34535,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-10-10"
+  "lastAgendaDate": "2026-10-11"
 }
