@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgtdHT2QMotdHT2QM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEg8v_82wMo8v_82wM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -506,7 +506,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgtdHT2QMotdHT2QM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEg8v_82wMo8v_82wM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
