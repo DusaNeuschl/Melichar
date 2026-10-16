@@ -1011,7 +1011,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CJ-gl5K-tJcDEJ-gl5K-tJcDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CP-Eu7_hvZcDEP-Eu7_hvZcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -33876,6 +33876,11 @@
         "74ojcpb174o6cbb56lijeb9kckqj0b9p6cp3ab9j74q6aob2c8q34c9p60": {
           "summary": "Uklid na Bystrine!",
           "start": "2026-10-15T16:00:00+02:00",
+          "calendar": "Společný kalendář"
+        },
+        "ckrjgc9lc4sj6bb469h36b9kcgp66b9ocorjcbb671ijad9kcksj2pb26c": {
+          "summary": "Alhambra stk do mesiaca",
+          "start": "2027-03-22T07:30:00+01:00",
           "calendar": "Společný kalendář"
         }
       }
