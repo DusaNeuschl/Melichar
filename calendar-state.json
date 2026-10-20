@@ -4833,11 +4833,6 @@
           "start": "2040-08-23T09:00:00+02:00",
           "calendar": "Společný kalendář"
         },
-        "6gpm6or364sm6bb575i32b9k6so32b9o6osjibb5c4q32d9gccqm6or3c8_20261013T070000Z": {
-          "summary": "Fili a Franta Bystřina",
-          "start": "2026-10-13T09:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
         "6gpm6or364sm6bb575i32b9k6so32b9o6osjibb5c4q32d9gccqm6or3c8_20261020T070000Z": {
           "summary": "Fili a Franta Bystřina",
           "start": "2026-10-20T09:00:00+02:00",
@@ -33856,7 +33851,7 @@
       }
     },
     "dushi.mokry@gmail.com": {
-      "syncToken": "CO_71bXetpcDEO_71bXetpcDGAUgtdHT2QMotdHT2QM=",
+      "syncToken": "CL_V56Tvx5cDEL_V56Tvx5cDGAUgtdHT2QMotdHT2QM=",
       "eventCache": {
         "ccp62p3360oj6b9i6cp62b9kchh6cbb274ojeb9p75im6dhpc8pmacb164_20270629": {
           "summary": "Narozeniny: Tatko Narodeniny",
