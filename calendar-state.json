@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEg8vfv3AMo8vfv3AM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEg3dLs3QMo3dLs3QM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -506,7 +506,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEg8vfv3AMo8vfv3AM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEg3dLs3QMo3dLs3QM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
@@ -34435,5 +34435,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-10-22"
+  "lastAgendaDate": "2026-10-23"
 }
