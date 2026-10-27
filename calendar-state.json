@@ -1011,7 +1011,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CI-75v_-15cDEI-75v_-15cDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CI-Z6tKI2pcDEI-Z6tKI2pcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -26533,11 +26533,6 @@
           "start": "2040-08-24T14:30:00+02:00",
           "calendar": "Společný kalendář"
         },
-        "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261020T140000Z": {
-          "summary": "Hasiči",
-          "start": "2026-10-20T16:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
         "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261027T150000Z": {
           "summary": "Hasiči",
           "start": "2026-10-27T16:00:00+01:00",
@@ -33836,6 +33831,11 @@
         "eadr9fftp5rvv9l2pficqm8uos_20401102T120000Z": {
           "summary": "František hudebka",
           "start": "2040-11-02T13:00:00+01:00",
+          "calendar": "Společný kalendář"
+        },
+        "68ojgob670qm6b9i6grjab9k6kr6cb9o68rm2bb3clj36p346sq36oj2ck": {
+          "summary": "Studijní meeting online",
+          "start": "2026-11-13T17:00:00+01:00",
           "calendar": "Společný kalendář"
         }
       }
