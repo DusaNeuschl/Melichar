@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEg3dLs3QMo3dLs3QM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgpYuN4AMopYuN4AM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -121,11 +121,6 @@
         "20291225_754fp6t71k0j3sn26lkg6na6e8": {
           "summary": "1. svátek vánoční",
           "start": "2029-12-25",
-          "calendar": "České státní svátky"
-        },
-        "20261028_k56pa3jgmctmmhjgjulomf4bo8": {
-          "summary": "Den vzniku samostatného československého státu",
-          "start": "2026-10-28",
           "calendar": "České státní svátky"
         },
         "20261117_7e66cpgi58k5obunqnjvcqgjhs": {
@@ -506,7 +501,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEg3dLs3QMo3dLs3QM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgpYuN4AMopYuN4AM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
@@ -758,11 +753,6 @@
           "start": "2029-12-24",
           "calendar": "České sviatky"
         },
-        "20261028_tpo66rcafbigef1g9l1moit5e4": {
-          "summary": "Independent Czechoslovak State Day",
-          "start": "2026-10-28",
-          "calendar": "České sviatky"
-        },
         "20261226_h39ic63dstrnvs3o5q9t1dakl4": {
           "summary": "St. Stephen's Day",
           "start": "2026-12-26",
@@ -1011,7 +1001,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CI-Z6tKI2pcDEI-Z6tKI2pcDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CO-JuMbQ3ZcDEO-JuMbQ3ZcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -34445,5 +34435,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-10-28"
+  "lastAgendaDate": "2026-10-29"
 }
