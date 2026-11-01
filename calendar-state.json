@@ -1001,7 +1001,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CO-JuMbQ3ZcDEO-JuMbQ3ZcDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CI_Dg_zM5pcDEI_Dg_zM5pcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -33806,6 +33806,11 @@
         "68ojgob670qm6b9i6grjab9k6kr6cb9o68rm2bb3clj36p346sq36oj2ck": {
           "summary": "Studijní meeting online",
           "start": "2026-11-13T17:00:00+01:00",
+          "calendar": "Společný kalendář"
+        },
+        "70sm8cph6oom6b9g69i3ib9k74s3eb9oc4o6cb9g70oj8p9lcks34oj56s": {
+          "summary": "Skúška besidky",
+          "start": "2026-11-22T10:45:00+01:00",
           "calendar": "Společný kalendář"
         }
       }
