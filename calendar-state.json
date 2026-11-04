@@ -15643,11 +15643,6 @@
           "start": "2040-08-22T09:00:00+02:00",
           "calendar": "Společný kalendář"
         },
-        "65i30oph6ssj6bb3c9i68b9k74r6cbb16kqjeb9ic8rj2c336hh68cj36c": {
-          "summary": "Státní svátek",
-          "start": "2026-10-28",
-          "calendar": "Společný kalendář"
-        },
         "ckoj2cph6hh64bb471ijgb9k64o3gb9p70pm4b9o61gm4ob6c9hm4c346k_20261102T124500Z": {
           "summary": "Fili sbor a nauka",
           "start": "2026-11-02T13:45:00+01:00",
@@ -34395,5 +34390,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-11-03"
+  "lastAgendaDate": "2026-11-04"
 }
