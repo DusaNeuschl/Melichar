@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgv92e4gMov92e4gM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgs7PR4gMos7PR4gM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -501,7 +501,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgv92e4gMov92e4gM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgs7PR4gMos7PR4gM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
@@ -12026,11 +12026,6 @@
         "clh62pj5ccqj4bb374r30b9kc4rm8b9p6grjib9p60pmcd31ccp36opgck_20400827T070000Z": {
           "summary": "Franta Bystřinka",
           "start": "2040-08-27T09:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
-        "71hjadhoc8q3cb9nchgmcb9kc8q3ebb2cgr30b9j64o3aohp6com4e9g6g_20261029T143000Z": {
-          "summary": "Plavání",
-          "start": "2026-10-29T15:30:00+01:00",
           "calendar": "Společný kalendář"
         },
         "6gsm2chj6lijgbb26oq34b9k75i6cb9pcgo3ab9p70o3geb274q34opp6g_20261104T080000Z": {
