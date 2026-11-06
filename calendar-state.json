@@ -1001,7 +1001,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CN_wnbOP65cDEN_wnbOP65cDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CK_rs77I8ZcDEK_rs77I8ZcDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -1151,11 +1151,6 @@
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20560609": {
           "summary": "Prababka narodeniny",
           "start": "2056-06-09",
-          "calendar": "Společný kalendář"
-        },
-        "57j209lk47mlsep1smgu3c0ug7": {
-          "summary": "Keci a politika - Zlin",
-          "start": "2026-11-19T18:00:00+01:00",
           "calendar": "Společný kalendář"
         },
         "6crjcp9l74pj2bb574p32b9k69h32b9ocphjab9lchgjae33clij8p366c": {
@@ -34380,5 +34375,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-11-05"
+  "lastAgendaDate": "2026-11-06"
 }
