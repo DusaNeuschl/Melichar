@@ -30083,11 +30083,6 @@
           "start": "2026-11-19T19:30:00+01:00",
           "calendar": "Společný kalendář"
         },
-        "6so62or16os6ab9k6sp6ab9kcos3abb1c4r3cbb26pi3ecpk6csm2p9hco": {
-          "summary": "Halloween oslava",
-          "start": "2026-10-31",
-          "calendar": "Společný kalendář"
-        },
         "ckrjgc9lc4sj6bb469h36b9kcgp66b9ocorjcbb671ijad9kcksj2pb26c": {
           "summary": "Alhambra stk do mesiaca",
           "start": "2027-03-22T07:30:00+01:00",
@@ -34365,5 +34360,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-11-06"
+  "lastAgendaDate": "2026-11-07"
 }
