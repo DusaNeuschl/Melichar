@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEglfuY5AMolfuY5AM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgnKTz5AMonKTz5AM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -501,7 +501,7 @@
       }
     },
     "sk.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEglfuY5AMolfuY5AM=",
+      "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgnKTz5AMonKTz5AM=",
       "eventCache": {
         "20261117_73jjbc6is3hbn348dkk19eg0kg": {
           "summary": "Struggle for Freedom and Democracy Day",
@@ -12011,11 +12011,6 @@
         "clh62pj5ccqj4bb374r30b9kc4rm8b9p6grjib9p60pmcd31ccp36opgck_20400827T070000Z": {
           "summary": "Franta Bystřinka",
           "start": "2040-08-27T09:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
-        "6gsm2chj6lijgbb26oq34b9k75i6cb9pcgo3ab9p70o3geb274q34opp6g_20261104T080000Z": {
-          "summary": "Fili Bystřina",
-          "start": "2026-11-04T09:00:00+01:00",
           "calendar": "Společný kalendář"
         },
         "6gsm2chj6lijgbb26oq34b9k75i6cb9pcgo3ab9p70o3geb274q34opp6g_20261111T080000Z": {
