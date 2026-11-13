@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEg4J2Q5QMo4J2Q5QM=",
+      "syncToken": "CJ-GmvP_55YDEJ-GmvP_55YDGAEgqpnU5QMoqpnU5QM=",
       "eventCache": {
         "20270501_cburiv40c9mrlj20novk1gror4": {
           "summary": "Svátek práce",
@@ -8396,11 +8396,6 @@
         "6gpm6or364sm6bb575i32b9k6so32b9o6osjibb5c4q32d9gccqm6or3c8_20400821T070000Z": {
           "summary": "Fili a Franta Bystřina",
           "start": "2040-08-21T09:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
-        "ckqm2pj560qm8bb370o3eb9kc9im4bb16pi64bb5coqj4p3364smcpho6g": {
-          "summary": "Kika Praha",
-          "start": "2026-11-06T09:30:00+01:00",
           "calendar": "Společný kalendář"
         },
         "clh62pj5ccqj4bb374r30b9kc4rm8b9p6grjib9p60pmcd31ccp36opgck_20261109T080000Z": {
