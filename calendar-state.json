@@ -123,11 +123,6 @@
           "start": "2029-12-25",
           "calendar": "České státní svátky"
         },
-        "20261117_7e66cpgi58k5obunqnjvcqgjhs": {
-          "summary": "Den boje za svobodu a demokracii",
-          "start": "2026-11-17",
-          "calendar": "České státní svátky"
-        },
         "20270214_kcrnplfops2bac5b97pmvfpht4": {
           "summary": "Den svatého Valentýna",
           "start": "2027-02-14",
@@ -503,11 +498,6 @@
     "sk.czech#holiday@group.v.calendar.google.com": {
       "syncToken": "CN_ozt7MyZYDEN_ozt7MyZYDGAEgpLGM5gMopLGM5gM=",
       "eventCache": {
-        "20261117_73jjbc6is3hbn348dkk19eg0kg": {
-          "summary": "Struggle for Freedom and Democracy Day",
-          "start": "2026-11-17",
-          "calendar": "České sviatky"
-        },
         "20270326_mqvdlrres8c3co6vgvksce8kqs": {
           "summary": "Good Friday",
           "start": "2027-03-26",
@@ -37890,5 +37880,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-11-17"
+  "lastAgendaDate": "2026-11-18"
 }
