@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CM-v36OTk5gDEM-v36OTk5gDGAEg1Obx5wMo1Obx5wM=",
+      "syncToken": "CO-LruLhmpgDEO-LruLhmpgDGAEg1Obx5wMo1Obx5wM=",
       "eventCache": {
         "20290513_uk8hsfe5uvm6r642hn7tf71jvg": {
           "summary": "Den matek",
@@ -128,369 +128,374 @@
           "start": "2031-06-15",
           "calendar": "České státní svátky"
         },
-        "20261226_rhfq7jvb7jt70grrrfe21vsdnc": {
-          "summary": "2. svátek vánoční",
-          "start": "2026-12-26",
-          "calendar": "České státní svátky"
-        },
-        "20270101_a8l4s737oa09b5boa197nru8f4": {
-          "summary": "Den obnovy samostatného českého státu",
-          "start": "2027-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20270326_fc1pc1r26fj3km5d8a24fu6338": {
-          "summary": "Velký pátek",
-          "start": "2027-03-26",
-          "calendar": "České státní svátky"
-        },
-        "20270706_0inhoajbi6ecltn12fscp3ssqo": {
-          "summary": "Den upálení mistra Jana Husa",
-          "start": "2027-07-06",
-          "calendar": "České státní svátky"
-        },
-        "20270928_08i7kkkfc3q1ua6c59tlgqhbmo": {
-          "summary": "Den české státnosti",
-          "start": "2027-09-28",
-          "calendar": "České státní svátky"
-        },
-        "20271028_r82iq2bp99sslqhtje5r27gkis": {
-          "summary": "Den vzniku samostatného československého státu",
-          "start": "2027-10-28",
-          "calendar": "České státní svátky"
-        },
-        "20271117_1ogk3rom8piildjuseihuv9tsc": {
-          "summary": "Den boje za svobodu a demokracii",
-          "start": "2027-11-17",
-          "calendar": "České státní svátky"
-        },
-        "20280414_lu9olj6oadi3ed0q5gvhhd2a4c": {
-          "summary": "Velký pátek",
-          "start": "2028-04-14",
-          "calendar": "České státní svátky"
-        },
-        "20280706_7g8qerovq7m7ke5hks8u36l77s": {
-          "summary": "Den upálení mistra Jana Husa",
-          "start": "2028-07-06",
-          "calendar": "České státní svátky"
-        },
-        "20281117_f6f6kqtlkaqsqrn716hskvugqc": {
-          "summary": "Den boje za svobodu a demokracii",
-          "start": "2028-11-17",
-          "calendar": "České státní svátky"
-        },
-        "20281224_87j7uqv0tkph4issoi9v8q40ng": {
-          "summary": "Štědrý den",
-          "start": "2028-12-24",
-          "calendar": "České státní svátky"
-        },
-        "20290101_bavc0agqiev5li3g8o08113mqg": {
-          "summary": "Den obnovy samostatného českého státu",
-          "start": "2029-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20290402_qlme03gv4dftqbkv6r6klng8p8": {
-          "summary": "Velikonoční pondělí",
-          "start": "2029-04-02",
-          "calendar": "České státní svátky"
-        },
-        "20290706_5im9rjboo8j0a53608qf4fpms0": {
-          "summary": "Den upálení mistra Jana Husa",
-          "start": "2029-07-06",
-          "calendar": "České státní svátky"
-        },
-        "20291226_sg6h691q3drsua6l0lh1pg52ck": {
-          "summary": "2. svátek vánoční",
-          "start": "2029-12-26",
-          "calendar": "České státní svátky"
-        },
-        "20300419_322vi4fej4q3p6olq3im6d1gss": {
-          "summary": "Velký pátek",
-          "start": "2030-04-19",
-          "calendar": "České státní svátky"
-        },
-        "20300422_3544f8kjh2aabpacdh4k46cdms": {
-          "summary": "Velikonoční pondělí",
-          "start": "2030-04-22",
-          "calendar": "České státní svátky"
-        },
-        "20300705_7ch8nenlieuva3rc02hi398tpc": {
-          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
-          "start": "2030-07-05",
-          "calendar": "České státní svátky"
-        },
-        "20300706_07qk9ik1q04e99sg4tafh3bqh8": {
-          "summary": "Den upálení mistra Jana Husa",
-          "start": "2030-07-06",
-          "calendar": "České státní svátky"
-        },
-        "20300928_3r7n7f8esqhe21e99fctsfq7k8": {
-          "summary": "Den české státnosti",
-          "start": "2030-09-28",
-          "calendar": "České státní svátky"
-        },
-        "20301028_h8oa699go72qukitf44nhcq0go": {
-          "summary": "Den vzniku samostatného československého státu",
-          "start": "2030-10-28",
-          "calendar": "České státní svátky"
-        },
-        "20301224_p1m7gihju4t970sihqk7i27a10": {
-          "summary": "Štědrý den",
-          "start": "2030-12-24",
-          "calendar": "České státní svátky"
-        },
-        "20310101_6mal49q6cesphfac1dnnhuqvc0": {
-          "summary": "Nový rok",
-          "start": "2031-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20310101_h73jtc8at8l8jdne5ac5lbcaqo": {
-          "summary": "Den obnovy samostatného českého státu",
-          "start": "2031-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20310411_22769r6mpv4n0b8m6s73thds20": {
-          "summary": "Velký pátek",
-          "start": "2031-04-11",
-          "calendar": "České státní svátky"
-        },
-        "20310501_omse98rg35ivbhfqeq6o2issk0": {
-          "summary": "Svátek práce",
-          "start": "2031-05-01",
-          "calendar": "České státní svátky"
-        },
-        "20310705_cfaoco4bbkiglujqld2t3ok9eg": {
-          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
-          "start": "2031-07-05",
-          "calendar": "České státní svátky"
-        },
-        "20310928_32v486oukv3nv900p6oon389m0": {
-          "summary": "Den české státnosti",
-          "start": "2031-09-28",
-          "calendar": "České státní svátky"
-        },
-        "20311117_g7c4cm5ibf4mpon58htdapkep8": {
-          "summary": "Den boje za svobodu a demokracii",
-          "start": "2031-11-17",
-          "calendar": "České státní svátky"
-        },
-        "20311224_ne77ccs95sbd9v0k4jvd49nlt4": {
-          "summary": "Štědrý den",
-          "start": "2031-12-24",
-          "calendar": "České státní svátky"
-        },
-        "20261224_f1nhdvom24h4eca31kmihfh23s": {
-          "summary": "Štědrý den",
-          "start": "2026-12-24",
-          "calendar": "České státní svátky"
-        },
-        "20270101_0vajfi8qkfiqvilnsdbo6qph5o": {
-          "summary": "Nový rok",
-          "start": "2027-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20271224_lde225or4ppsin4p8hnt3bp32c": {
-          "summary": "Štědrý den",
-          "start": "2027-12-24",
-          "calendar": "České státní svátky"
-        },
-        "20280101_qebno1jhi9428qe8hg0knl5nqo": {
-          "summary": "Den obnovy samostatného českého státu",
-          "start": "2028-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20280417_f05cog914888a1jn20scqvkeog": {
-          "summary": "Velikonoční pondělí",
-          "start": "2028-04-17",
-          "calendar": "České státní svátky"
-        },
-        "20280508_79kjucutfv6q820por2tq37epo": {
-          "summary": "Den osvobození",
-          "start": "2028-05-08",
-          "calendar": "České státní svátky"
-        },
-        "20280705_cerdt9ipnjokkqu5uh2nmj19ns": {
-          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
-          "start": "2028-07-05",
-          "calendar": "České státní svátky"
-        },
-        "20281225_ud39pqbmukema061ire06a38cg": {
-          "summary": "1. svátek vánoční",
-          "start": "2028-12-25",
-          "calendar": "České státní svátky"
-        },
-        "20290501_9a0q6c7s26cmsffg26ciavp9u4": {
-          "summary": "Svátek práce",
-          "start": "2029-05-01",
-          "calendar": "České státní svátky"
-        },
-        "20290705_ctp7iue0cbsque0gddfpkd25c8": {
-          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
-          "start": "2029-07-05",
-          "calendar": "České státní svátky"
-        },
-        "20291117_u9ks68j2anllm7gq660fpg3up8": {
-          "summary": "Den boje za svobodu a demokracii",
-          "start": "2029-11-17",
-          "calendar": "České státní svátky"
-        },
-        "20291224_fmm48g2bj8sfmf8safa63m80f4": {
-          "summary": "Štědrý den",
-          "start": "2029-12-24",
-          "calendar": "České státní svátky"
-        },
-        "20300101_22sm7r1dqsap3q5habh3iffn98": {
-          "summary": "Den obnovy samostatného českého státu",
-          "start": "2030-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20300101_r07h2idt5101nfs7na4uimcoqc": {
-          "summary": "Nový rok",
-          "start": "2030-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20301117_57orelkr3l4q1oha6h8mf7456s": {
-          "summary": "Den boje za svobodu a demokracii",
-          "start": "2030-11-17",
-          "calendar": "České státní svátky"
-        },
-        "20301225_b653pf0e9hmr1s588mqo1vta18": {
-          "summary": "1. svátek vánoční",
-          "start": "2030-12-25",
-          "calendar": "České státní svátky"
-        },
-        "20301226_k0n51el05b5dvdguprel60gl60": {
-          "summary": "2. svátek vánoční",
-          "start": "2030-12-26",
-          "calendar": "České státní svátky"
-        },
-        "20311028_tlslfg5iud1p8r69i50lnup7n4": {
-          "summary": "Den vzniku samostatného československého státu",
-          "start": "2031-10-28",
-          "calendar": "České státní svátky"
-        },
-        "20311225_jdcji3ot42e2jsp3ql2m7muh7o": {
-          "summary": "1. svátek vánoční",
-          "start": "2031-12-25",
-          "calendar": "České státní svátky"
-        },
-        "20261225_rproh76a5db8am9pu56675ld74": {
+        "20261225_4labbs9481odi7a7psuglpdkek": {
           "summary": "1. svátek vánoční",
           "start": "2026-12-25",
           "calendar": "České státní svátky"
         },
-        "20270329_o9nq9alfm0ujj7jkdlqkckvcv4": {
-          "summary": "Velikonoční pondělí",
-          "start": "2027-03-29",
-          "calendar": "České státní svátky"
-        },
-        "20270501_rtcdrvhf2ich00iouporcf80vk": {
-          "summary": "Svátek práce",
-          "start": "2027-05-01",
-          "calendar": "České státní svátky"
-        },
-        "20270508_gde1cdc848hau9uuqhfrp8voh8": {
+        "20270508_k3dtv58qi07hukodnd13vck56g": {
           "summary": "Den osvobození",
           "start": "2027-05-08",
           "calendar": "České státní svátky"
         },
-        "20270705_f1mekhl01671jiatu79kvrmcfc": {
+        "20270705_6bvfe5f4kkt4jnjmkanha91lag": {
           "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
           "start": "2027-07-05",
           "calendar": "České státní svátky"
         },
-        "20271225_h8kd41btbhigbna90sdjvqutn0": {
+        "20270706_q40r8k6mmmcj17dvg4jaa3hjtk": {
+          "summary": "Den upálení mistra Jana Husa",
+          "start": "2027-07-06",
+          "calendar": "České státní svátky"
+        },
+        "20271117_1f38ivpfgrhe73q4pfeh8eus2o": {
+          "summary": "Den boje za svobodu a demokracii",
+          "start": "2027-11-17",
+          "calendar": "České státní svátky"
+        },
+        "20271225_9v7816v52ibf0ra1ma7bufvelg": {
           "summary": "1. svátek vánoční",
           "start": "2027-12-25",
           "calendar": "České státní svátky"
         },
-        "20271226_n4kgat9rf4fkhosfh477buqoc8": {
+        "20271226_goqv16f1hio8covsq74s2cfmdk": {
           "summary": "2. svátek vánoční",
           "start": "2027-12-26",
           "calendar": "České státní svátky"
         },
-        "20280501_2difofnh1cqrjhck961jug8840": {
+        "20280417_75fo3n9q3ufd161kng2d0dp7sk": {
+          "summary": "Velikonoční pondělí",
+          "start": "2028-04-17",
+          "calendar": "České státní svátky"
+        },
+        "20280501_untfp03uuge8c9l0ljmd3nddjo": {
           "summary": "Svátek práce",
           "start": "2028-05-01",
           "calendar": "České státní svátky"
         },
-        "20280928_dedmjl0ibjtpp61sta86vi23u0": {
-          "summary": "Den české státnosti",
-          "start": "2028-09-28",
-          "calendar": "České státní svátky"
-        },
-        "20281028_kml2018ijkm3oq1qef649cmong": {
-          "summary": "Den vzniku samostatného československého státu",
-          "start": "2028-10-28",
-          "calendar": "České státní svátky"
-        },
-        "20281226_q2plpvjiub1eq5gejh2pcpl2fc": {
-          "summary": "2. svátek vánoční",
-          "start": "2028-12-26",
-          "calendar": "České státní svátky"
-        },
-        "20290508_g17rmqkvu7fuhun5gijt1fhl0k": {
+        "20280508_osl9llk71tqb2cvt27v4nqerp8": {
           "summary": "Den osvobození",
-          "start": "2029-05-08",
+          "start": "2028-05-08",
           "calendar": "České státní svátky"
         },
-        "20290928_dl863fkl5fupevittp8t0qcgs8": {
-          "summary": "Den české státnosti",
-          "start": "2029-09-28",
+        "20280705_e1qcs74eno1vqg1msqn60e3368": {
+          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
+          "start": "2028-07-05",
           "calendar": "České státní svátky"
         },
-        "20291028_sf0adoqve54mp0cg2g9gs1eqhc": {
-          "summary": "Den vzniku samostatného československého státu",
-          "start": "2029-10-28",
+        "20281117_m1qrosvmj34hfe5dv3pm51vdsc": {
+          "summary": "Den boje za svobodu a demokracii",
+          "start": "2028-11-17",
           "calendar": "České státní svátky"
         },
-        "20291225_qg5bl2db7fnr78q021tlm5hndo": {
+        "20281225_s38cjb48e5vjhm39bk2k4srads": {
           "summary": "1. svátek vánoční",
-          "start": "2029-12-25",
+          "start": "2028-12-25",
           "calendar": "České státní svátky"
         },
-        "20300501_4sd2ae41e1snn12hjdveclnn9c": {
-          "summary": "Svátek práce",
-          "start": "2030-05-01",
-          "calendar": "České státní svátky"
-        },
-        "20300508_v14l7tond0ghfffm43f9kgruqc": {
-          "summary": "Den osvobození",
-          "start": "2030-05-08",
-          "calendar": "České státní svátky"
-        },
-        "20310414_97jaivpojqhrgjuj7mddqjce2s": {
-          "summary": "Velikonoční pondělí",
-          "start": "2031-04-14",
-          "calendar": "České státní svátky"
-        },
-        "20310508_cp2c4rpjvvrkvsene3sctpa2lc": {
-          "summary": "Den osvobození",
-          "start": "2031-05-08",
-          "calendar": "České státní svátky"
-        },
-        "20310706_gtr7o5vtnpeeiihtdk1q1bg6uc": {
-          "summary": "Den upálení mistra Jana Husa",
-          "start": "2031-07-06",
-          "calendar": "České státní svátky"
-        },
-        "20280101_0rpfhnd8dakrtc2h7bt062vpck": {
-          "summary": "Nový rok",
-          "start": "2028-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20290101_4lqhn0eq1a724g3r1ieofnk79o": {
-          "summary": "Nový rok",
-          "start": "2029-01-01",
-          "calendar": "České státní svátky"
-        },
-        "20290330_fcbht7722qidhmj4tms3uujun8": {
+        "20290330_tu519kjrs4of5587v04csdi4ns": {
           "summary": "Velký pátek",
           "start": "2029-03-30",
           "calendar": "České státní svátky"
         },
-        "20311226_73pai0k7l072o1j84hu1fc4e6c": {
+        "20290508_19m5ems0sfk6qqpcg1st3sp26c": {
+          "summary": "Den osvobození",
+          "start": "2029-05-08",
+          "calendar": "České státní svátky"
+        },
+        "20290706_vr0flh49i408dmk2a5cili3398": {
+          "summary": "Den upálení mistra Jana Husa",
+          "start": "2029-07-06",
+          "calendar": "České státní svátky"
+        },
+        "20291028_britp13rlugsp728t78qebvs08": {
+          "summary": "Den vzniku samostatného československého státu",
+          "start": "2029-10-28",
+          "calendar": "České státní svátky"
+        },
+        "20291225_754fp6t71k0j3sn26lkg6na6e8": {
+          "summary": "1. svátek vánoční",
+          "start": "2029-12-25",
+          "calendar": "České státní svátky"
+        },
+        "20300419_2pn98tm1enf8hc7ov170vg7tfs": {
+          "summary": "Velký pátek",
+          "start": "2030-04-19",
+          "calendar": "České státní svátky"
+        },
+        "20300705_o23qv9vt11ccmelc6rjvcegils": {
+          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
+          "start": "2030-07-05",
+          "calendar": "České státní svátky"
+        },
+        "20301028_hhm02jpjj7ltrm2m4ug572pf0c": {
+          "summary": "Den vzniku samostatného československého státu",
+          "start": "2030-10-28",
+          "calendar": "České státní svátky"
+        },
+        "20301225_5gu1p44v7eh0km601ecqnl46vs": {
+          "summary": "1. svátek vánoční",
+          "start": "2030-12-25",
+          "calendar": "České státní svátky"
+        },
+        "20310501_6n21mkbo9u10jeh51nn48fe4q4": {
+          "summary": "Svátek práce",
+          "start": "2031-05-01",
+          "calendar": "České státní svátky"
+        },
+        "20310508_kon0b6v4mikhdn6ffi1qqhcrts": {
+          "summary": "Den osvobození",
+          "start": "2031-05-08",
+          "calendar": "České státní svátky"
+        },
+        "20311225_tdk88pp5mdmeq9pd9vbe0lk1l4": {
+          "summary": "1. svátek vánoční",
+          "start": "2031-12-25",
+          "calendar": "České státní svátky"
+        },
+        "20270101_iv12d3fmlc4b100c4mf99iaao8": {
+          "summary": "Nový rok",
+          "start": "2027-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20270329_c1r7hgd8q4et6g4oibbcnauof4": {
+          "summary": "Velikonoční pondělí",
+          "start": "2027-03-29",
+          "calendar": "České státní svátky"
+        },
+        "20270501_cburiv40c9mrlj20novk1gror4": {
+          "summary": "Svátek práce",
+          "start": "2027-05-01",
+          "calendar": "České státní svátky"
+        },
+        "20270928_g389bu0fbonnrgflur9586q9j0": {
+          "summary": "Den české státnosti",
+          "start": "2027-09-28",
+          "calendar": "České státní svátky"
+        },
+        "20280101_jgu6u1cnb95791la4hkcdmrk8g": {
+          "summary": "Den obnovy samostatného českého státu",
+          "start": "2028-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20280414_kssl7s4scljb4fqq30bbkeiab4": {
+          "summary": "Velký pátek",
+          "start": "2028-04-14",
+          "calendar": "České státní svátky"
+        },
+        "20281224_sob1cse0885o681fm16jdpp6io": {
+          "summary": "Štědrý den",
+          "start": "2028-12-24",
+          "calendar": "České státní svátky"
+        },
+        "20281226_r2udjlioqveff1jb06dd084grc": {
+          "summary": "2. svátek vánoční",
+          "start": "2028-12-26",
+          "calendar": "České státní svátky"
+        },
+        "20290101_lfqdonbs9md3o4ir3l449fgbcg": {
+          "summary": "Den obnovy samostatného českého státu",
+          "start": "2029-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20290402_ok4bnbj6k78f56boejt4d1h0k8": {
+          "summary": "Velikonoční pondělí",
+          "start": "2029-04-02",
+          "calendar": "České státní svátky"
+        },
+        "20290928_mcrn420hk3gnjao7vhiqsmgri4": {
+          "summary": "Den české státnosti",
+          "start": "2029-09-28",
+          "calendar": "České státní svátky"
+        },
+        "20291226_cd93eqg5uen04afske6lg01oig": {
+          "summary": "2. svátek vánoční",
+          "start": "2029-12-26",
+          "calendar": "České státní svátky"
+        },
+        "20300101_uach6amddo12t8hoch96vj8m5o": {
+          "summary": "Den obnovy samostatného českého státu",
+          "start": "2030-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20300501_659iqngennu7s5k6qgtc4tm1po": {
+          "summary": "Svátek práce",
+          "start": "2030-05-01",
+          "calendar": "České státní svátky"
+        },
+        "20301226_tusi84hcb92ft1cmkqovenf6pc": {
+          "summary": "2. svátek vánoční",
+          "start": "2030-12-26",
+          "calendar": "České státní svátky"
+        },
+        "20310101_amd853i517h4lbhhna7pqb0tqo": {
+          "summary": "Nový rok",
+          "start": "2031-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20310101_lmthdc8nkdpinu24vpm3snjo74": {
+          "summary": "Den obnovy samostatného českého státu",
+          "start": "2031-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20310411_rs7gnv3scraengpboai2b2bt48": {
+          "summary": "Velký pátek",
+          "start": "2031-04-11",
+          "calendar": "České státní svátky"
+        },
+        "20310414_3rp9eb22lfru6suqdt1tj3ujjg": {
+          "summary": "Velikonoční pondělí",
+          "start": "2031-04-14",
+          "calendar": "České státní svátky"
+        },
+        "20310705_1ibac5onu25l6sgdt6l31q97eo": {
+          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
+          "start": "2031-07-05",
+          "calendar": "České státní svátky"
+        },
+        "20311224_dqtpvigrf057iahfu11ett816k": {
+          "summary": "Štědrý den",
+          "start": "2031-12-24",
+          "calendar": "České státní svátky"
+        },
+        "20261117_7e66cpgi58k5obunqnjvcqgjhs": {
+          "summary": "Den boje za svobodu a demokracii",
+          "start": "2026-11-17",
+          "calendar": "České státní svátky"
+        },
+        "20261224_v453bbnd8j240qdtadgcsbf5i4": {
+          "summary": "Štědrý den",
+          "start": "2026-12-24",
+          "calendar": "České státní svátky"
+        },
+        "20261226_o4o12mh10anvn9u637qu4p3628": {
+          "summary": "2. svátek vánoční",
+          "start": "2026-12-26",
+          "calendar": "České státní svátky"
+        },
+        "20270101_vfdfgqqorppil9v4m1un9iq29o": {
+          "summary": "Den obnovy samostatného českého státu",
+          "start": "2027-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20270326_115fe18ja33nhkrlkvih29nvmk": {
+          "summary": "Velký pátek",
+          "start": "2027-03-26",
+          "calendar": "České státní svátky"
+        },
+        "20271028_hnf1f5hjonr13f92r0bp21tk2c": {
+          "summary": "Den vzniku samostatného československého státu",
+          "start": "2027-10-28",
+          "calendar": "České státní svátky"
+        },
+        "20271224_nd4qs3ks4n607sdqkj32ku6tl8": {
+          "summary": "Štědrý den",
+          "start": "2027-12-24",
+          "calendar": "České státní svátky"
+        },
+        "20280706_vrr6sprp63e88phaqjr41biuuk": {
+          "summary": "Den upálení mistra Jana Husa",
+          "start": "2028-07-06",
+          "calendar": "České státní svátky"
+        },
+        "20280928_i2n7pa6utd0pea08s1c3jlgbec": {
+          "summary": "Den české státnosti",
+          "start": "2028-09-28",
+          "calendar": "České státní svátky"
+        },
+        "20281028_8f86k49tu62unnr841bhsmif98": {
+          "summary": "Den vzniku samostatného československého státu",
+          "start": "2028-10-28",
+          "calendar": "České státní svátky"
+        },
+        "20290101_6kv59766cigg4mn4tdovubi9fc": {
+          "summary": "Nový rok",
+          "start": "2029-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20290501_67uklig32gds1ngik65gg6i2v4": {
+          "summary": "Svátek práce",
+          "start": "2029-05-01",
+          "calendar": "České státní svátky"
+        },
+        "20290705_aas1crs3le4ps39cnet9s0prq0": {
+          "summary": "Den slovanských věrozvěstů Cyrila a Metoděje",
+          "start": "2029-07-05",
+          "calendar": "České státní svátky"
+        },
+        "20291117_k6j13m2ir1pfa4piqga3mabnck": {
+          "summary": "Den boje za svobodu a demokracii",
+          "start": "2029-11-17",
+          "calendar": "České státní svátky"
+        },
+        "20291224_he4hic1ctchclki95sdepgim8c": {
+          "summary": "Štědrý den",
+          "start": "2029-12-24",
+          "calendar": "České státní svátky"
+        },
+        "20300101_g22cjfrg7uueks8k2j7afmsboo": {
+          "summary": "Nový rok",
+          "start": "2030-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20300508_vn74ptsscc8guqfanqv2i7ovrg": {
+          "summary": "Den osvobození",
+          "start": "2030-05-08",
+          "calendar": "České státní svátky"
+        },
+        "20300706_kubaujra09j24sulhtjggc9kks": {
+          "summary": "Den upálení mistra Jana Husa",
+          "start": "2030-07-06",
+          "calendar": "České státní svátky"
+        },
+        "20300928_1o93oni6198o5fr4uock2eiiu8": {
+          "summary": "Den české státnosti",
+          "start": "2030-09-28",
+          "calendar": "České státní svátky"
+        },
+        "20301117_tp40k9abvu1u5dj62mpr0hd404": {
+          "summary": "Den boje za svobodu a demokracii",
+          "start": "2030-11-17",
+          "calendar": "České státní svátky"
+        },
+        "20301224_e7aehb9onvtacvl9e0cnbihbfg": {
+          "summary": "Štědrý den",
+          "start": "2030-12-24",
+          "calendar": "České státní svátky"
+        },
+        "20310706_uk4igs0rondh86r2lqnctrtno8": {
+          "summary": "Den upálení mistra Jana Husa",
+          "start": "2031-07-06",
+          "calendar": "České státní svátky"
+        },
+        "20310928_j3bvdttv1i9v9ci96a38b2uma4": {
+          "summary": "Den české státnosti",
+          "start": "2031-09-28",
+          "calendar": "České státní svátky"
+        },
+        "20311028_rh8rc2f6j45pp06lgfagceqs00": {
+          "summary": "Den vzniku samostatného československého státu",
+          "start": "2031-10-28",
+          "calendar": "České státní svátky"
+        },
+        "20311117_8kkh8p8hggputkugbrh42hq0a8": {
+          "summary": "Den boje za svobodu a demokracii",
+          "start": "2031-11-17",
+          "calendar": "České státní svátky"
+        },
+        "20311226_viq8grv2mmsdqjtvdlgod6n4to": {
           "summary": "2. svátek vánoční",
           "start": "2031-12-26",
+          "calendar": "České státní svátky"
+        },
+        "20280101_6vlf4o3ffniege1k8vrdo74v3s": {
+          "summary": "Nový rok",
+          "start": "2028-01-01",
+          "calendar": "České státní svátky"
+        },
+        "20300422_hkstun76birb5rsnlvfaph3i1g": {
+          "summary": "Velikonoční pondělí",
+          "start": "2030-04-22",
           "calendar": "České státní svátky"
         }
       }
@@ -37850,5 +37855,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-11-22"
+  "lastAgendaDate": "2026-11-23"
 }
