@@ -358,11 +358,6 @@
           "start": "2031-12-24",
           "calendar": "České státní svátky"
         },
-        "20261117_7e66cpgi58k5obunqnjvcqgjhs": {
-          "summary": "Den boje za svobodu a demokracii",
-          "start": "2026-11-17",
-          "calendar": "České státní svátky"
-        },
         "20261224_v453bbnd8j240qdtadgcsbf5i4": {
           "summary": "Štědrý den",
           "start": "2026-12-24",
@@ -37840,5 +37835,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-11-23"
+  "lastAgendaDate": "2026-11-24"
 }
