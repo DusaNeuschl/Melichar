@@ -991,7 +991,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CI-h-vDTk5gDEI-h-vDTk5gDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CI-hn_j3oJgDEI-hn_j3oJgDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -4776,11 +4776,6 @@
         "69j3ceb364s6cb9h68sm4b9k65hmcb9p6gq68b9p6dgjee9h60sjie9p6g_20400823T070000Z": {
           "summary": "Fili Bystřina",
           "start": "2040-08-23T09:00:00+02:00",
-          "calendar": "Společný kalendář"
-        },
-        "6gpm6or364sm6bb575i32b9k6so32b9o6osjibb5c4q32d9gccqm6or3c8_20261117T080000Z": {
-          "summary": "Fili a Franta Bystřina",
-          "start": "2026-11-17T09:00:00+01:00",
           "calendar": "Společný kalendář"
         },
         "6gpm6or364sm6bb575i32b9k6so32b9o6osjibb5c4q32d9gccqm6or3c8_20261124T080000Z": {
@@ -26338,11 +26333,6 @@
           "start": "2040-08-24T14:30:00+02:00",
           "calendar": "Společný kalendář"
         },
-        "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261117T150000Z": {
-          "summary": "Hasiči",
-          "start": "2026-11-17T16:00:00+01:00",
-          "calendar": "Společný kalendář"
-        },
         "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261124T150000Z": {
           "summary": "Hasiči",
           "start": "2026-11-24T16:00:00+01:00",
@@ -26353,24 +26343,9 @@
           "start": "2026-12-01T16:00:00+01:00",
           "calendar": "Společný kalendář"
         },
-        "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261208T150000Z": {
-          "summary": "Hasiči",
-          "start": "2026-12-08T16:00:00+01:00",
-          "calendar": "Společný kalendář"
-        },
         "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261215T150000Z": {
           "summary": "Hasiči",
           "start": "2026-12-15T16:00:00+01:00",
-          "calendar": "Společný kalendář"
-        },
-        "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261222T150000Z": {
-          "summary": "Hasiči",
-          "start": "2026-12-22T16:00:00+01:00",
-          "calendar": "Společný kalendář"
-        },
-        "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20261229T150000Z": {
-          "summary": "Hasiči",
-          "start": "2026-12-29T16:00:00+01:00",
           "calendar": "Společný kalendář"
         },
         "c8oj8p1k70pjab9n61hj6b9k6co6abb26gs32b9l70oj4eb5c8o6ae9m6s_20270105T150000Z": {
