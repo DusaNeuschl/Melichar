@@ -1,7 +1,7 @@
 {
   "calendars": {
     "cs.czech#holiday@group.v.calendar.google.com": {
-      "syncToken": "CO-LruLhmpgDEO-LruLhmpgDGAEg1Obx5wMo1Obx5wM=",
+      "syncToken": "CO-1-pOZopgDEO-1-pOZopgDGAEg1Obx5wMo1Obx5wM=",
       "eventCache": {
         "20290513_uk8hsfe5uvm6r642hn7tf71jvg": {
           "summary": "Den matek",
@@ -41405,5 +41405,5 @@
       "eventCache": {}
     }
   },
-  "lastAgendaDate": "2026-11-25"
+  "lastAgendaDate": "2026-11-26"
 }
