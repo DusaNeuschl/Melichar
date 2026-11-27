@@ -991,7 +991,7 @@
       }
     },
     "t1pfoa71hiqj9641omh8eolubc@group.calendar.google.com": {
-      "syncToken": "CL_O4Y3Fo5gDEL_O4Y3Fo5gDGAUgkOKp0QMokOKp0QM=",
+      "syncToken": "CK-Hhqa9p5gDEK-Hhqa9p5gDGAUgkOKp0QMokOKp0QM=",
       "eventCache": {
         "c4q34d9p6csj2b9g6cs3eb9kcorj2b9p6di62b9n70q38ohh70oj4c1h70_20270609": {
           "summary": "Prababka narodeniny",
@@ -22698,11 +22698,6 @@
           "start": "2040-08-27T16:00:00+02:00",
           "calendar": "Společný kalendář"
         },
-        "c9gj4db16orjib9k69i3eb9kcdi3eb9o74r34bb1c8sjge34c8r3gdhkco_20261120T133000Z": {
-          "summary": "Aerobik Fili",
-          "start": "2026-11-20T14:30:00+01:00",
-          "calendar": "Společný kalendář"
-        },
         "c9gj4db16orjib9k69i3eb9kcdi3eb9o74r34bb1c8sjge34c8r3gdhkco_20261127T133000Z": {
           "summary": "Aerobik Fili",
           "start": "2026-11-27T14:30:00+01:00",
@@ -29871,11 +29866,6 @@
         "ckrjgc9lc4sj6bb469h36b9kcgp66b9ocorjcbb671ijad9kcksj2pb26c": {
           "summary": "Alhambra stk do mesiaca",
           "start": "2027-03-22T07:30:00+01:00",
-          "calendar": "Společný kalendář"
-        },
-        "eadr9fftp5rvv9l2pficqm8uos_20261120T120000Z": {
-          "summary": "František hudebka",
-          "start": "2026-11-20T13:00:00+01:00",
           "calendar": "Společný kalendář"
         },
         "eadr9fftp5rvv9l2pficqm8uos_20261127T120000Z": {
@@ -40776,6 +40766,11 @@
         "60qjgd1i6dh32bb3ccq34b9kchi3ib9p6dh3eb9lccpm8eb26ksm2oj6ck_20401121T150000Z": {
           "summary": "Franta Fotbal",
           "start": "2040-11-21T16:00:00+01:00",
+          "calendar": "Společný kalendář"
+        },
+        "cgs3iohj74rj2b9n74smab9k75i34bb16or6abb4c5gm2e33cor38d1pc8": {
+          "summary": "Dílna s Aňou - Fili",
+          "start": "2026-12-18T12:30:00+01:00",
           "calendar": "Společný kalendář"
         }
       }
